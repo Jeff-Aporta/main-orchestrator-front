@@ -3,6 +3,7 @@
   "use strict";
   window.ISAFront.registerApp({
     ns: "MO",
+    api: {},
     theme: { lsKey: "main-orchestrator:theme" },
     widgets: { targetStyle: "chip" },
   });
