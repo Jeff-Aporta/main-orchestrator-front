@@ -1,32 +1,29 @@
-# main-orchestrator-front
+<p align="center">
+  <img src="https://api.iconify.design/mdi/transit-connection-variant.svg?color=%231565c0&width=96&height=96" width="96" height="96" alt="Main Orchestrator" />
+</p>
 
-**Diccionario central** del ecosistema Jeff-Aporta / ISA: cards con cada app, URLs de front (GitHub Pages), Swagger (`/ui`), OpenAPI (`/doc`) y base API del Worker.
+<h1 align="center">main-orchestrator-front</h1>
+
+<p align="center"><strong>Hub del ecosistema Jeff-Aporta / ISA</strong> — catálogo de microservicios con enlaces a GitHub Pages y Swagger.</p>
 
 | Recurso | URL |
 |---------|-----|
 | **Panel (GH Pages)** | https://jeff-aporta.github.io/main-orchestrator-front/ |
-| **API orquestador** | https://main-orchestrator.jeffaporta.workers.dev |
+| **Swagger unificado** | https://main-orchestrator.jeffaporta.workers.dev/ui |
 | **Catálogo JSON** | `GET /catalog` |
-| **Swagger orquestador** | https://main-orchestrator.jeffaporta.workers.dev/ui |
 
 ## Qué muestra
 
-- **Cards** por servicio: front, swagger, OpenAPI, API base y prefijos del orquestador.
+- **Cards** por servicio: front (GH Pages) y Swagger (`/ui`).
 - Copiar URL y abrir en nueva pestaña.
 - Toggle orquestador local `:8780` / producción.
 - Tabla de enrutamiento (opcional, incl. legacy Azure).
 
 Datos desde `GET /catalog` (fuente canónica en `backend/src/catalog.ts`).
 
-## Swagger — auth
+## Metadatos
 
-En `/ui` de cualquier Worker (plantilla `front-shared/worker-swagger`):
-
-| Modal | Uso |
-|-------|-----|
-| **Iniciar sesión** | Usuario + contraseña → JWT de prueba (1 h) |
-| **Pegar JWT** | Token manual / Bearer |
-| **Authorize** (Swagger UI) | Modal nativo Bearer |
+Favicon, Open Graph y `theme-color` vía [`JeffAppMeta`](https://github.com/Jeff-Aporta/front-shared/blob/main/cdn/isa/js/core/app-meta.js) + [Iconify API](https://iconify.design/) (`mdi:transit-connection-variant`).
 
 ## Desarrollo
 
