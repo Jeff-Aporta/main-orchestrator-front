@@ -19,9 +19,14 @@
       }, React.createElement(UI.Icon, { icon: "mdi:open-in-new", size: 14 })));
   }
 
+  function swaggerHref(app: MoCatalogEntry, orchBase: string): string {
+    if (app.id === "main-orchestrator") return orchBase.replace(/\/$/, "") + "/ui";
+    return (app.swaggerUrl || "").trim();
+  }
+
   function AppCard(props: { app: MoCatalogEntry; orchBase: string }) {
     const a = props.app;
-    const orchSwagger = a.id === "main-orchestrator" ? props.orchBase + "/ui" : null;
+    const swagger = swaggerHref(a, props.orchBase);
     return React.createElement(MUI.Card, { variant: "outlined", sx: { height: "100%", display: "flex", flexDirection: "column" } },
       React.createElement(MUI.CardContent, { sx: { flex: 1 } },
         React.createElement(MUI.Stack, { direction: "row", spacing: 1, alignItems: "flex-start", sx: { mb: 1 } },
@@ -31,10 +36,7 @@
             a.infra ? React.createElement(MUI.Chip, { size: "small", label: "infra", sx: { mt: 0.5 } }) : null)),
         React.createElement(MUI.Typography, { variant: "body2", color: "text.secondary", sx: { mb: 1.5 } }, a.description),
         a.frontUrl ? React.createElement(CopyLink, { label: "Front", url: a.frontUrl }) : null,
-        a.swaggerUrl ? React.createElement(CopyLink, { label: "Swagger", url: a.swaggerUrl }) : null,
-        orchSwagger ? React.createElement(CopyLink, { label: "Swag. orch.", url: orchSwagger }) : null,
-        a.docUrl ? React.createElement(CopyLink, { label: "OpenAPI", url: a.docUrl }) : null,
-        a.apiBase ? React.createElement(CopyLink, { label: "API", url: a.apiBase }) : null,
+        swagger ? React.createElement(CopyLink, { label: "Swagger", url: swagger }) : null,
         a.orchestratorPrefixes && a.orchestratorPrefixes.length
           ? React.createElement(MUI.Box, { sx: { mt: 1 } },
             React.createElement(MUI.Typography, { variant: "caption", color: "text.secondary", display: "block", gutterBottom: true },
@@ -46,11 +48,13 @@
                 ? React.createElement(MUI.Chip, { size: "small", label: "+" + (a.orchestratorPrefixes.length - 6) })
                 : null))
           : null),
-      a.swaggerUrl
+      swagger || a.frontUrl
         ? React.createElement(MUI.CardActions, { sx: { pt: 0 } },
-          React.createElement(MUI.Button, {
-            size: "small", href: a.swaggerUrl, target: "_blank", rel: "noopener noreferrer",
-          }, "Abrir Swagger"),
+          swagger
+            ? React.createElement(MUI.Button, {
+              size: "small", href: swagger, target: "_blank", rel: "noopener noreferrer",
+            }, "Abrir Swagger")
+            : null,
           a.frontUrl
             ? React.createElement(MUI.Button, {
               size: "small", href: a.frontUrl, target: "_blank", rel: "noopener noreferrer",
@@ -111,7 +115,7 @@
       React.createElement(MUI.Paper, { sx: { p: 2, mb: 2 } },
         React.createElement(MUI.Typography, { variant: "h5", gutterBottom: true }, "Ecosistema Jeff-Aporta"),
         React.createElement(MUI.Typography, { variant: "body2", color: "text.secondary", sx: { mb: 1 } },
-          catalog?.note || "Diccionario central: fronts en GitHub Pages, Swagger en Workers, consumo vía orquestador."),
+          catalog?.note || "Enlaces por app: GitHub Pages (front) y Swagger (/ui). La URL de API figura dentro de Swagger."),
         React.createElement(MUI.Stack, { direction: "row", spacing: 1, flexWrap: "wrap", alignItems: "center" },
           React.createElement(MUI.Chip, { size: "small", label: "Orquestador", className: "meta-mono", variant: "outlined" }),
           React.createElement(MUI.Typography, { variant: "caption", className: "meta-mono" }, orchBase),
