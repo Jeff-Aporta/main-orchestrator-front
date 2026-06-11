@@ -139,7 +139,7 @@
       ns: "MO",
       title: "Main Orchestrator",
       icon: "mdi:transit-connection-variant",
-      loginGate: true,
+      loginGate: false,
     }, content);
   }
 

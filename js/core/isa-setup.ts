@@ -5,9 +5,5 @@
     ns: "MO",
     theme: { lsKey: "main-orchestrator:theme" },
     widgets: { targetStyle: "chip" },
-    loginGate: {
-      mode: "redirect",
-      redirectMessage: "Inicie sesión para administrar el orquestador de APIs.",
-    },
   });
 })();
