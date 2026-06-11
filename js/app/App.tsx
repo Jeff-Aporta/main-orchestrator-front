@@ -59,6 +59,23 @@
         : null);
   }
 
+  function RoutesTable(props: { routes: MoRouteRow[] }) {
+    return React.createElement(MUI.Paper, { sx: { p: 2, overflow: "auto" } },
+      React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Tabla de enrutamiento"),
+      React.createElement(MUI.Table, { size: "small" },
+        React.createElement(MUI.TableHead, null,
+          React.createElement(MUI.TableRow, null,
+            ["Servicio", "Base", "Prefijos"].map((h) =>
+              React.createElement(MUI.TableCell, { key: h }, h)))),
+        React.createElement(MUI.TableBody, null,
+          props.routes.map((row) =>
+            React.createElement(MUI.TableRow, { key: row.service + row.base },
+              React.createElement(MUI.TableCell, null, row.service),
+              React.createElement(MUI.TableCell, null,
+                React.createElement("span", { className: "meta-mono" }, row.base)),
+              React.createElement(MUI.TableCell, null, (row.prefixes || []).join(", "))))));
+  }
+
   function App() {
     const Shell = window.ISAFront.Layout.AppShell;
     const [catalog, setCatalog] = React.useState<MoCatalogResponse | null>(null);
@@ -116,22 +133,7 @@
           apps.map((app) =>
             React.createElement(MUI.Grid, { key: app.id, size: { xs: 12, sm: 6, md: 4 } },
               React.createElement(AppCard, { app, orchBase })))),
-      showRoutes
-        ? React.createElement(MUI.Paper, { sx: { p: 2, overflow: "auto" } },
-          React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Tabla de enrutamiento"),
-          React.createElement(MUI.Table, { size: "small" },
-            React.createElement(MUI.TableHead, null,
-              React.createElement(MUI.TableRow, null,
-                ["Servicio", "Base", "Prefijos"].map((h) =>
-                  React.createElement(MUI.TableCell, { key: h }, h)))),
-            React.createElement(MUI.TableBody, null,
-              routes.map((row) =>
-                React.createElement(MUI.TableRow, { key: row.service + row.base },
-                  React.createElement(MUI.TableCell, null, row.service),
-                  React.createElement(MUI.TableCell, null,
-                    React.createElement("span", { className: "meta-mono" }, row.base)),
-                  React.createElement(MUI.TableCell, null, (row.prefixes || []).join(", "))))))
-        : null,
+      showRoutes ? React.createElement(RoutesTable, { routes }) : null,
     );
 
     return React.createElement(Shell, {
