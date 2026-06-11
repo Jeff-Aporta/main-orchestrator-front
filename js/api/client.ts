@@ -15,7 +15,7 @@
   window.MO = window.MO || ({} as MoNs);
   window.MO.Api = {
     health: () => getJson<{ ok: boolean; service: string; role: string }>("/"),
-    routes: () => getJson<{ ok: boolean; routes: MoRouteRow[] }>("/routes"),
-    catalog: () => getJson<MoCatalogResponse>("/catalog"),
+    routes: () => getJson<{ ok: boolean; routes: MoRouteRow[] }>("/api/routes"),
+    catalog: () => getJson<MoCatalogResponse>("/api/catalog"),
   };
 })();
