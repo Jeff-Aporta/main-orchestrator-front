@@ -4,26 +4,12 @@
 
 <h1 align="center">main-orchestrator-front</h1>
 
-<p align="center"><strong>Hub del ecosistema Jeff-Aporta / ISA</strong> — catálogo de microservicios con enlaces a GitHub Pages y Swagger.</p>
+<p align="center"><strong>Hub del ecosistema Jeff-Aporta</strong> — catálogo de apps con enlaces a cada pantalla y documentación de API.</p>
 
 ## Arquitectura
+![Diagrama de arquitectura](https://mermaid.ink/img/JSV7aW5pdDogeyJmbG93Y2hhcnQiOiB7ImN1cnZlIjogInN0ZXBBZnRlciIsICJodG1sTGFiZWxzIjogdHJ1ZSwgIm5vZGVTcGFjaW5nIjogNDQsICJyYW5rU3BhY2luZyI6IDUyLCAicGFkZGluZyI6IDE4fX19JSUKZmxvd2NoYXJ0IExSCiAgc3ViZ3JhcGggaHViIFttYWluLW9yY2hlc3RyYXRvci1mcm9udF0KICAgIFVJW0NhcmRzICsgdGFibGEgcnV0YXNdCiAgZW5kCiAgc3ViZ3JhcGggb3JjaCBbbWFpbi1vcmNoZXN0cmF0b3IgV29ya2VyXQogICAgQ0FUWyJHRVQgL2FwaS9jYXRhbG9nIl0KICAgIFJUWyJHRVQgL2FwaS9yb3V0ZXMiXQogIGVuZAogIHN1YmdyYXBoIHRhcmdldHMgW0Rlc3Rpbm9zXQogICAgUFtHSCBQYWdlcyBwb3IgYXBwXQogICAgU1tTd2FnZ2VyIC9hcGkvdWldCiAgZW5kCiAgVUkgLS0-fGZldGNofCBDQVQgJiBSVAogIFVJIC0tPnxlbmxhY2VzfCBQICYgUw==)
 
-```mermaid
-flowchart LR
-  subgraph hub [main-orchestrator-front]
-    UI[Cards + tabla rutas]
-  end
-  subgraph orch [main-orchestrator Worker]
-    CAT["GET /api/catalog"]
-    RT["GET /api/routes"]
-  end
-  subgraph targets [Destinos]
-    P[GH Pages por app]
-    S[Swagger /api/ui]
-  end
-  UI -->|fetch| CAT & RT
-  UI -->|enlaces| P & S
-```
+> **Fuente del diagrama:** [`docs/arquitectura.mmd`](docs/arquitectura.mmd) — editar el `.mmd`; regenerar imagen: `node scripts/mermaid-ink-url.mjs main-orchestrator/frontend/docs/arquitectura.mmd` (desde `apps/`).
 
 | Recurso | URL |
 |---------|-----|

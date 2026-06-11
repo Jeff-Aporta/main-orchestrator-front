@@ -1,0 +1,14 @@
+flowchart LR
+  subgraph hub [main-orchestrator-front]
+    UI[Cards + tabla rutas]
+  end
+  subgraph orch [main-orchestrator Worker]
+    CAT["GET /api/catalog"]
+    RT["GET /api/routes"]
+  end
+  subgraph targets [Destinos]
+    P[GH Pages por app]
+    S[Swagger /api/ui]
+  end
+  UI -->|fetch| CAT & RT
+  UI -->|enlaces| P & S
