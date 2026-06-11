@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<script src="https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@main/cdn/base-href.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Main Orchestrator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@main/cdn/isa/css/base.css" />
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?external=react",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/jsx-runtime",
+    "@emotion/react": "https://esm.sh/@emotion/react@11.14.0?external=react,react-dom",
+    "@emotion/styled": "https://esm.sh/@emotion/styled@11.14.1?external=react,react-dom,@emotion/react",
+    "@mui/material": "https://esm.sh/@mui/material@9.1.0?external=react,react-dom,@emotion/react,@emotion/styled",
+    "@mui/material/": "https://esm.sh/@mui/material@9.1.0/"
+  }
+}
+</script>
+<script src="https://unpkg.com/@babel/standalone@7.26.9/babel.min.js"></script>
+<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script>
+(async function () {
+  try {
+    var res = await fetch("js/boot/loader.ts", { cache: "no-store" });
+    if (!res.ok) throw new Error("No se pudo cargar el loader (" + res.status + ")");
+    var out = Babel.transform(await res.text(), { presets: ["typescript"], filename: "loader.ts" }).code;
+    eval(out);
+  } catch (e) {
+    document.getElementById("root").innerHTML =
+      '<pre style="color:#ff8a80;padding:24px;font-family:monospace">Bootstrap error:\n' + (e && e.stack ? e.stack : e) + "</pre>";
+  }
+})();
+</script>
+</body>
+</html>
