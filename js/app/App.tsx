@@ -1,31 +1,78 @@
-/* Panel admin — salud, tabla de rutas y enlaces Swagger del ecosistema. */
+/* Diccionario central — cards con front, swagger y API de cada app del ecosistema. */
 (function () {
   "use strict";
   const MUI = MaterialUI;
   const UI = window.MO.UI;
 
-  const WORKER_SWAGGER: { id: string; label: string; url: string }[] = [
-    { id: "main-orchestrator", label: "Main Orchestrator", url: "https://main-orchestrator.jeffaporta.workers.dev/ui" },
-    { id: "system-login", label: "system-login", url: "https://system-login.jeffaporta.workers.dev/ui" },
-    { id: "conversations", label: "conversations", url: "https://conversations.jeffaporta.workers.dev/ui" },
-    { id: "flsjeff", label: "flsjeff", url: "https://flsjeff.jeffaporta.workers.dev/ui" },
-    { id: "iatools", label: "iatools", url: "https://iatools.jeffaporta.workers.dev/ui" },
-    { id: "jagudeloe", label: "jagudeloe", url: "https://jagudeloe.jeffaporta.workers.dev/ui" },
-  ];
+  function CopyLink(props: { label: string; url: string }) {
+    const [done, setDone] = React.useState(false);
+    if (!props.url) return null;
+    return React.createElement(MUI.Stack, { direction: "row", spacing: 0.5, alignItems: "center", sx: { py: 0.25 } },
+      React.createElement(MUI.Typography, { variant: "caption", color: "text.secondary", sx: { minWidth: 72 } }, props.label),
+      React.createElement(MUI.Typography, { variant: "caption", className: "meta-mono", sx: { flex: 1, wordBreak: "break-all" } }, props.url),
+      React.createElement(MUI.IconButton, {
+        size: "small",
+        onClick: () => { navigator.clipboard.writeText(props.url); setDone(true); setTimeout(() => setDone(false), 1200); },
+      }, React.createElement(UI.Icon, { icon: done ? "mdi:check" : "mdi:content-copy", size: 14 })),
+      React.createElement(MUI.IconButton, {
+        size: "small", component: "a", href: props.url, target: "_blank", rel: "noopener noreferrer",
+      }, React.createElement(UI.Icon, { icon: "mdi:open-in-new", size: 14 })));
+  }
+
+  function AppCard(props: { app: MoCatalogEntry; orchBase: string }) {
+    const a = props.app;
+    const orchSwagger = a.id === "main-orchestrator" ? props.orchBase + "/ui" : null;
+    return React.createElement(MUI.Card, { variant: "outlined", sx: { height: "100%", display: "flex", flexDirection: "column" } },
+      React.createElement(MUI.CardContent, { sx: { flex: 1 } },
+        React.createElement(MUI.Stack, { direction: "row", spacing: 1, alignItems: "flex-start", sx: { mb: 1 } },
+          React.createElement(UI.Icon, { icon: a.icon || "mdi:application-outline", size: 28 }),
+          React.createElement(MUI.Box, { sx: { flex: 1, minWidth: 0 } },
+            React.createElement(MUI.Typography, { variant: "h6", component: "h2", sx: { fontSize: "1rem", lineHeight: 1.3 } }, a.name),
+            a.infra ? React.createElement(MUI.Chip, { size: "small", label: "infra", sx: { mt: 0.5 } }) : null)),
+        React.createElement(MUI.Typography, { variant: "body2", color: "text.secondary", sx: { mb: 1.5 } }, a.description),
+        a.frontUrl ? React.createElement(CopyLink, { label: "Front", url: a.frontUrl }) : null,
+        a.swaggerUrl ? React.createElement(CopyLink, { label: "Swagger", url: a.swaggerUrl }) : null,
+        orchSwagger ? React.createElement(CopyLink, { label: "Swag. orch.", url: orchSwagger }) : null,
+        a.docUrl ? React.createElement(CopyLink, { label: "OpenAPI", url: a.docUrl }) : null,
+        a.apiBase ? React.createElement(CopyLink, { label: "API", url: a.apiBase }) : null,
+        a.orchestratorPrefixes && a.orchestratorPrefixes.length
+          ? React.createElement(MUI.Box, { sx: { mt: 1 } },
+            React.createElement(MUI.Typography, { variant: "caption", color: "text.secondary", display: "block", gutterBottom: true },
+              "Prefijos orquestador"),
+            React.createElement(MUI.Stack, { direction: "row", flexWrap: "wrap", gap: 0.5 },
+              a.orchestratorPrefixes.slice(0, 6).map((p) =>
+                React.createElement(MUI.Chip, { key: p, size: "small", label: p, variant: "outlined" })),
+              a.orchestratorPrefixes.length > 6
+                ? React.createElement(MUI.Chip, { size: "small", label: "+" + (a.orchestratorPrefixes.length - 6) })
+                : null))
+          : null),
+      a.swaggerUrl
+        ? React.createElement(MUI.CardActions, { sx: { pt: 0 } },
+          React.createElement(MUI.Button, {
+            size: "small", href: a.swaggerUrl, target: "_blank", rel: "noopener noreferrer",
+          }, "Abrir Swagger"),
+          a.frontUrl
+            ? React.createElement(MUI.Button, {
+              size: "small", href: a.frontUrl, target: "_blank", rel: "noopener noreferrer",
+            }, "Abrir front")
+            : null)
+        : null);
+  }
 
   function App() {
     const Shell = window.ISAFront.Layout.AppShell;
-    const [health, setHealth] = React.useState<Record<string, unknown> | null>(null);
+    const [catalog, setCatalog] = React.useState<MoCatalogResponse | null>(null);
     const [routes, setRoutes] = React.useState<MoRouteRow[]>([]);
     const [err, setErr] = React.useState("");
     const [loading, setLoading] = React.useState(false);
+    const [showRoutes, setShowRoutes] = React.useState(false);
 
     const reload = React.useCallback(async () => {
       setLoading(true);
       setErr("");
       try {
-        const [h, r] = await Promise.all([window.MO.Api.health(), window.MO.Api.routes()]);
-        setHealth(h as Record<string, unknown>);
+        const [cat, r] = await Promise.all([window.MO.Api.catalog(), window.MO.Api.routes()]);
+        setCatalog(cat);
         setRoutes(r.routes || []);
       } catch (e) {
         setErr(e instanceof Error ? e.message : String(e));
@@ -41,72 +88,50 @@
       return () => window.removeEventListener(window.MO.Config.EVENT, onTarget);
     }, [reload]);
 
-    const apiBase = window.MO.Config.base();
+    const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
+    const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure" || showRoutes);
 
     const content = React.createElement(MUI.Container, { maxWidth: "lg", sx: { py: 2 } },
-      err ? React.createElement(MUI.Alert, { severity: "error", sx: { mb: 2 } }, err) : null,
-      React.createElement(MUI.Stack, { direction: "row", spacing: 1, sx: { mb: 2, flexWrap: "wrap", alignItems: "center" } },
-        React.createElement(MUI.Button, { variant: "contained", disabled: loading, onClick: reload }, "Recargar"),
-        React.createElement(MUI.Button, {
-          variant: "outlined",
-          href: apiBase + "/ui",
-          target: "_blank",
-          rel: "noopener noreferrer",
-        }, "Swagger orquestador"),
-        React.createElement(MUI.Button, {
-          variant: "outlined",
-          href: apiBase + "/doc",
-          target: "_blank",
-          rel: "noopener noreferrer",
-        }, "OpenAPI JSON"),
-      ),
       React.createElement(MUI.Paper, { sx: { p: 2, mb: 2 } },
-        React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Salud"),
-        health
-          ? React.createElement(MUI.Stack, { spacing: 0.5 },
-            React.createElement(MUI.Typography, { variant: "body2" },
-              String(health.service), " · ", String(health.role)),
-            React.createElement(MUI.Typography, { variant: "caption", color: "text.secondary", className: "meta-mono" },
-              apiBase))
-          : React.createElement(MUI.Typography, { variant: "body2", color: "text.secondary" }, loading ? "Consultando…" : "—"),
+        React.createElement(MUI.Typography, { variant: "h5", gutterBottom: true }, "Ecosistema Jeff-Aporta"),
+        React.createElement(MUI.Typography, { variant: "body2", color: "text.secondary", sx: { mb: 1 } },
+          catalog?.note || "Diccionario central: fronts en GitHub Pages, Swagger en Workers, consumo vía orquestador."),
+        React.createElement(MUI.Stack, { direction: "row", spacing: 1, flexWrap: "wrap", alignItems: "center" },
+          React.createElement(MUI.Chip, { size: "small", label: "Orquestador", className: "meta-mono", variant: "outlined" }),
+          React.createElement(MUI.Typography, { variant: "caption", className: "meta-mono" }, orchBase),
+          React.createElement(MUI.Button, { size: "small", variant: "contained", disabled: loading, onClick: reload }, "Recargar"),
+          React.createElement(MUI.Button, {
+            size: "small", variant: "outlined",
+            href: orchBase + "/ui", target: "_blank", rel: "noopener noreferrer",
+          }, "Swagger orquestador"),
+          React.createElement(MUI.Button, {
+            size: "small", variant: "text", onClick: () => setShowRoutes((v) => !v),
+          }, showRoutes ? "Ocultar legacy" : "Mostrar legacy")),
       ),
-      React.createElement(MUI.Paper, { sx: { p: 2, mb: 2, overflow: "auto" } },
-        React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Tabla de enrutamiento"),
-        React.createElement(MUI.Table, { size: "small", stickyHeader: true },
-          React.createElement(MUI.TableHead, null,
-            React.createElement(MUI.TableRow, null,
-              ["Servicio", "Base destino", "Prefijos", "strip /api"].map((h) =>
-                React.createElement(MUI.TableCell, { key: h }, h)))),
-          React.createElement(MUI.TableBody, null,
-            routes.map((row) =>
-              React.createElement(MUI.TableRow, { key: row.service + row.base },
-                React.createElement(MUI.TableCell, null,
-                  React.createElement(MUI.Chip, { size: "small", label: row.service })),
-                React.createElement(MUI.TableCell, null,
-                  React.createElement("span", { className: "meta-mono" }, row.base)),
-                React.createElement(MUI.TableCell, null,
-                  (row.prefixes || []).join(", ")),
-                React.createElement(MUI.TableCell, null, row.stripApi ? "sí" : "—"),
-              )))),
-      ),
-      React.createElement(MUI.Paper, { sx: { p: 2 } },
-        React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Swagger por servicio"),
-        React.createElement(MUI.List, { dense: true },
-          WORKER_SWAGGER.map((w) =>
-            React.createElement(MUI.ListItem, { key: w.id, disablePadding: true },
-              React.createElement(MUI.ListItemButton, {
-                component: "a",
-                href: w.url,
-                target: "_blank",
-                rel: "noopener noreferrer",
-              },
-                React.createElement(MUI.ListItemText, {
-                  primary: w.label,
-                  secondary: w.url,
-                }),
-                React.createElement(UI.Icon, { icon: "mdi:open-in-new", size: 18 }),
-              )))),
-      ),
+      err ? React.createElement(MUI.Alert, { severity: "error", sx: { mb: 2 } }, err) : null,
+      loading && !catalog
+        ? React.createElement(MUI.Box, { sx: { py: 4, textAlign: "center" } },
+          React.createElement(MUI.CircularProgress, { size: 32 }))
+        : React.createElement(MUI.Grid, { container: true, spacing: 2, sx: { mb: 2 } },
+          apps.map((app) =>
+            React.createElement(MUI.Grid, { key: app.id, size: { xs: 12, sm: 6, md: 4 } },
+              React.createElement(AppCard, { app, orchBase })))),
+      showRoutes
+        ? React.createElement(MUI.Paper, { sx: { p: 2, overflow: "auto" } },
+          React.createElement(MUI.Typography, { variant: "subtitle1", gutterBottom: true }, "Tabla de enrutamiento"),
+          React.createElement(MUI.Table, { size: "small" },
+            React.createElement(MUI.TableHead, null,
+              React.createElement(MUI.TableRow, null,
+                ["Servicio", "Base", "Prefijos"].map((h) =>
+                  React.createElement(MUI.TableCell, { key: h }, h)))),
+            React.createElement(MUI.TableBody, null,
+              routes.map((row) =>
+                React.createElement(MUI.TableRow, { key: row.service + row.base },
+                  React.createElement(MUI.TableCell, null, row.service),
+                  React.createElement(MUI.TableCell, null,
+                    React.createElement("span", { className: "meta-mono" }, row.base)),
+                  React.createElement(MUI.TableCell, null, (row.prefixes || []).join(", "))))))
+        : null,
     );
 
     return React.createElement(Shell, {

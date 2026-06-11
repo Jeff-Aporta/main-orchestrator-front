@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages (private)
+name: Deploy GitHub Pages
 
 on:
   push:
@@ -25,6 +25,8 @@ jobs:
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Subir artefacto estático
         uses: actions/upload-pages-artifact@v4

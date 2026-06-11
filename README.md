@@ -1,42 +1,38 @@
 # main-orchestrator-front
 
-Panel de administración del **orquestador central** Jeff-Aporta / ISA. Repo **privado** en GitHub Pages (solo miembros del repo).
+**Diccionario central** del ecosistema Jeff-Aporta / ISA: cards con cada app, URLs de front (GitHub Pages), Swagger (`/ui`), OpenAPI (`/doc`) y base API del Worker.
 
 | Recurso | URL |
 |---------|-----|
-| **Pages (privado)** | https://jeff-aporta.github.io/main-orchestrator-front/ |
-| **API Worker** | https://main-orchestrator.jeffaporta.workers.dev |
+| **Panel (GH Pages)** | https://jeff-aporta.github.io/main-orchestrator-front/ |
+| **API orquestador** | https://main-orchestrator.jeffaporta.workers.dev |
+| **Catálogo JSON** | `GET /catalog` |
 | **Swagger orquestador** | https://main-orchestrator.jeffaporta.workers.dev/ui |
 
-## Qué hace
+## Qué muestra
 
-- Estado de salud del orquestador (`GET /`).
-- Tabla de enrutamiento (`GET /routes`).
-- Enlaces a Swagger UI de cada Worker del ecosistema.
-- Toggle **orquestador local :8780 / producción** (misma clave que el resto de fronts ISA).
-- Login vía **system-login** (gate redirect).
+- **Cards** por servicio: front, swagger, OpenAPI, API base y prefijos del orquestador.
+- Copiar URL y abrir en nueva pestaña.
+- Toggle orquestador local `:8780` / producción.
+- Tabla de enrutamiento (opcional, incl. legacy Azure).
 
-La URL de la API **no** se define aquí: viene de `front-shared` → `MAIN_ORCHESTRATOR_URL_*`.
+Datos desde `GET /catalog` (fuente canónica en `backend/src/catalog.ts`).
 
-## Desarrollo local
+## Swagger — auth
+
+En `/ui` de cualquier Worker (plantilla `front-shared/worker-swagger`):
+
+| Modal | Uso |
+|-------|-----|
+| **Iniciar sesión** | Usuario + contraseña → JWT de prueba (1 h) |
+| **Pegar JWT** | Token manual / Bearer |
+| **Authorize** (Swagger UI) | Modal nativo Bearer |
+
+## Desarrollo
 
 ```bash
 npx serve .
-# wrangler dev en ../backend (:8780) si usas modo local
+# wrangler dev en ../backend (:8780)
 ```
-
-## CI
-
-Push a `main` → workflow `.github/workflows/pages.yml` → GitHub Pages (build type: workflow).
-
-Tras crear el repo privado, habilitar Pages con origen **GitHub Actions** (lo hace `push-all.ps1 -InitMainOrchestratorFront`).
-
-## Repos relacionados
-
-| Repo | Rol |
-|------|-----|
-| [main-orchestrator-back](https://github.com/Jeff-Aporta/main-orchestrator-back) | Worker Cloudflare (privado) |
-| [main-orchestrator-front](https://github.com/Jeff-Aporta/main-orchestrator-front) | Este panel (privado, GH Pages) |
-| [front-shared](https://github.com/Jeff-Aporta/front-shared) | URL central del orquestador |
 
 MIT · [Jeff-Aporta](https://github.com/Jeff-Aporta)

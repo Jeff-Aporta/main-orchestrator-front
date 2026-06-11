@@ -16,5 +16,6 @@
   window.MO.Api = {
     health: () => getJson<{ ok: boolean; service: string; role: string }>("/"),
     routes: () => getJson<{ ok: boolean; routes: MoRouteRow[] }>("/routes"),
+    catalog: () => getJson<MoCatalogResponse>("/catalog"),
   };
 })();
