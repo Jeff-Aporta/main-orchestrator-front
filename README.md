@@ -14,14 +14,14 @@
 | Recurso | URL |
 |---------|-----|
 | **Panel (GH Pages)** | https://jeff-aporta.github.io/main-orchestrator-front/ |
-| **Swagger unificado** | https://main-orchestrator.jeffaporta.workers.dev/api/ui |
-| **Catálogo JSON** | `GET /api/catalog` |
+| **Swagger unificado** | Enlace desde el panel (modo producción) o `GET /api/ui` vía gateway |
+| **Catálogo JSON** | `GET /api/catalog` vía gateway |
 
 ## Qué muestra
 
 - **Cards** por servicio: front (GH Pages) y Swagger (`/api/ui`).
 - Copiar URL y abrir en nueva pestaña.
-- Toggle orquestador local `:8780` / producción.
+- Toggle **local / producción** (TargetSwitch).
 - Tabla de enrutamiento (opcional, incl. legacy Azure).
 
 Datos desde `GET /api/catalog` (fuente canónica en `backend/src/catalog.ts`).
