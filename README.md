@@ -4,37 +4,27 @@
 
 <h1 align="center">main-orchestrator-front</h1>
 
-<p align="center"><strong>Hub del ecosistema Jeff-Aporta</strong> — catálogo de apps con enlaces a cada pantalla y documentación de API.</p>
+<p align="center"><strong>Hub del ecosistema Jeff-Aporta</strong> — catálogo de apps con enlaces a cada pantalla.</p>
 
-## Arquitectura
-![Diagrama de arquitectura](https://mermaid.ink/img/JSV7aW5pdDogeyJmbG93Y2hhcnQiOiB7ImN1cnZlIjogInN0ZXBBZnRlciIsICJodG1sTGFiZWxzIjogdHJ1ZSwgIm5vZGVTcGFjaW5nIjogNDQsICJyYW5rU3BhY2luZyI6IDUyLCAicGFkZGluZyI6IDE4fX19JSUKZmxvd2NoYXJ0IExSCiAgc3ViZ3JhcGggaHViIFttYWluLW9yY2hlc3RyYXRvci1mcm9udF0KICAgIFVJW0NhcmRzICsgdGFibGEgcnV0YXNdCiAgZW5kCiAgc3ViZ3JhcGggb3JjaCBbbWFpbi1vcmNoZXN0cmF0b3IgV29ya2VyXQogICAgQ0FUWyJHRVQgL2FwaS9jYXRhbG9nIl0KICAgIFJUWyJHRVQgL2FwaS9yb3V0ZXMiXQogIGVuZAogIHN1YmdyYXBoIHRhcmdldHMgW0Rlc3Rpbm9zXQogICAgUFtHSCBQYWdlcyBwb3IgYXBwXQogICAgU1tTd2FnZ2VyIC9hcGkvdWldCiAgZW5kCiAgVUkgLS0-fGZldGNofCBDQVQgJiBSVAogIFVJIC0tPnxlbmxhY2VzfCBQICYgUw==)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-live-2ea44f?logo=githubpages&logoColor=white)](https://jeff-aporta.github.io/main-orchestrator-front/)
 
-> **Fuente del diagrama:** [`docs/arquitectura.mmd`](docs/arquitectura.mmd) — editar el `.mmd`; regenerar imagen: `node scripts/mermaid-ink-url.mjs main-orchestrator/frontend/docs/arquitectura.mmd` (desde `apps/`).
+## Demo
 
-| Recurso | URL |
-|---------|-----|
-| **Panel (GH Pages)** | https://jeff-aporta.github.io/main-orchestrator-front/ |
-| **Swagger unificado** | Enlace desde el panel (modo producción) o `GET /api/ui` vía gateway |
-| **Catálogo JSON** | `GET /api/catalog` vía gateway |
+**https://jeff-aporta.github.io/main-orchestrator-front/**
 
 ## Qué muestra
 
-- **Cards** por servicio: front (GH Pages) y Swagger (`/api/ui`).
-- Copiar URL y abrir en nueva pestaña.
-- Toggle **local / producción** (TargetSwitch).
-- Tabla de enrutamiento (opcional, incl. legacy Azure).
+- **Cards** por servicio con enlace al front en GitHub Pages
+- Copiar URL y abrir en nueva pestaña
+- Modo local o producción
+- Tabla de servicios del ecosistema
 
-Datos desde `GET /api/catalog` (fuente canónica en `backend/src/catalog.ts`).
+Icono: `mdi:transit-connection-variant` · tema `#1565c0`
 
-## Metadatos
-
-Favicon, Open Graph y `theme-color` vía [`JeffAppMeta`](https://github.com/Jeff-Aporta/front-shared/blob/main/cdn/isa/js/core/app-meta.js) + [Iconify API](https://iconify.design/) (`mdi:transit-connection-variant`).
-
-## Desarrollo
+## Vista local
 
 ```bash
 npx serve .
-# wrangler dev en ../backend (:8780)
 ```
 
 MIT · [Jeff-Aporta](https://github.com/Jeff-Aporta)
