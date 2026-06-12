@@ -3,7 +3,7 @@
   "use strict";
 
   const BOOT_HELPER =
-    "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@main/cdn/boot-helper.mjs";
+    "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@1dbb9fa/cdn/boot-helper.mjs?v=1dbb9fa";
 
   const FILES = ["js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
 
