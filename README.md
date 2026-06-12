@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://api.iconify.design/mdi/transit-connection-variant.svg?color=%231565c0&width=96&height=96" width="96" height="96" alt="Main Orchestrator" />
+  <img src="https://api.iconify.design/mdi/transit-connection-variant.svg?color=%231565c0&width=96&height=96" width="96" height="96" alt="Hub Jeff-Aporta" />
 </p>
 
 <h1 align="center">main-orchestrator-front</h1>
@@ -14,17 +14,10 @@
 
 ## Qué muestra
 
-- **Cards** por servicio con enlace al front en GitHub Pages
+- **Cards** por app con enlace a su panel en GitHub Pages
 - Copiar URL y abrir en nueva pestaña
-- Modo local o producción
-- Tabla de servicios del ecosistema
+- Tabla resumen del ecosistema
 
 Icono: `mdi:transit-connection-variant` · tema `#1565c0`
-
-## Vista local
-
-```bash
-npx serve .
-```
 
 MIT · [Jeff-Aporta](https://github.com/Jeff-Aporta)
