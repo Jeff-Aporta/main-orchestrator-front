@@ -10,14 +10,14 @@
     return (
       <MUI.Stack direction="row" spacing={0.5} alignItems="center" sx={{ py: 0.25 }}>
         <MUI.Typography variant="caption" color="text.secondary" sx={{ minWidth: 72 }}>{label}</MUI.Typography>
-        <MUI.Typography variant="caption" className="meta-mono" sx={{ flex: 1, wordBreak: "break-all" }}>{url}</MUI.Typography>
         <MUI.IconButton
           size="small"
+          aria-label={"Copiar enlace de " + label}
           onClick={() => { navigator.clipboard.writeText(url); setDone(true); setTimeout(() => setDone(false), 1200); }}
         >
           <UI.Icon icon={done ? "mdi:check" : "mdi:content-copy"} size={14} />
         </MUI.IconButton>
-        <MUI.IconButton size="small" component="a" href={url} target="_blank" rel="noopener noreferrer">
+        <MUI.IconButton size="small" component="a" href={url} target="_blank" rel="noopener noreferrer" aria-label={"Abrir " + label}>
           <UI.Icon icon="mdi:open-in-new" size={14} />
         </MUI.IconButton>
       </MUI.Stack>
@@ -47,7 +47,7 @@
           {app.orchestratorPrefixes && app.orchestratorPrefixes.length ? (
             <MUI.Box sx={{ mt: 1 }}>
               <MUI.Typography variant="caption" color="text.secondary" display="block" gutterBottom>
-                Prefijos orquestador
+                Prefijos de API
               </MUI.Typography>
               <MUI.Stack direction="row" flexWrap="wrap" gap={0.5}>
                 {app.orchestratorPrefixes.slice(0, 6).map((p) => (
@@ -88,7 +88,7 @@
             {routes.map((row) => (
               <MUI.TableRow key={row.service + row.base}>
                 <MUI.TableCell>{row.service}</MUI.TableCell>
-                <MUI.TableCell><span className="meta-mono">{row.base}</span></MUI.TableCell>
+                <MUI.TableCell>{row.base ? "Configurado" : "—"}</MUI.TableCell>
                 <MUI.TableCell>{(row.prefixes || []).join(", ")}</MUI.TableCell>
               </MUI.TableRow>
             ))}
@@ -130,19 +130,20 @@
     const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
     const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure" || showRoutes);
 
+    const envLabel = window.MO.Config.isLocal() ? "Local" : "Producción";
+
     const content = (
       <MUI.Container maxWidth="lg" sx={{ py: 2 }}>
         <MUI.Paper sx={{ p: 2, mb: 2 }}>
           <MUI.Typography variant="h5" gutterBottom>Ecosistema Jeff-Aporta</MUI.Typography>
           <MUI.Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            {catalog?.note || "Enlaces por app: GitHub Pages (front) y Swagger (/ui). La URL de API figura dentro de Swagger."}
+            {catalog?.note || "Enlaces por app: pantallas web y documentación de API."}
           </MUI.Typography>
           <MUI.Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
-            <MUI.Chip size="small" label="Orquestador" className="meta-mono" variant="outlined" />
-            <MUI.Typography variant="caption" className="meta-mono">{orchBase}</MUI.Typography>
+            <MUI.Chip size="small" label={"Entorno · " + envLabel} variant="outlined" />
             <MUI.Button size="small" variant="contained" disabled={loading} onClick={reload}>Recargar</MUI.Button>
             <MUI.Button size="small" variant="outlined" href={orchBase + "/ui"} target="_blank" rel="noopener noreferrer">
-              Swagger orquestador
+              Documentación API
             </MUI.Button>
             <MUI.Button size="small" variant="text" onClick={() => setShowRoutes((v) => !v)}>
               {showRoutes ? "Ocultar legacy" : "Mostrar legacy"}
@@ -168,7 +169,7 @@
     );
 
     return (
-      <Shell ns="MO" title="Main Orchestrator" icon="mdi:transit-connection-variant" loginGate={false}>
+      <Shell ns="MO" title="Catálogo del ecosistema" icon="mdi:transit-connection-variant" loginGate={false}>
         {content}
       </Shell>
     );
