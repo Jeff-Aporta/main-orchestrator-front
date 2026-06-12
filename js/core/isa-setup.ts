@@ -3,6 +3,7 @@
   "use strict";
   window.ISAFront.registerApp({
     ns: "MO",
+    auth: false,
     api: {
       local: "http://localhost:8780",
       online: "https://main-orchestrator.jeffaporta.workers.dev",
