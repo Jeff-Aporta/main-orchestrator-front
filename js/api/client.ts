@@ -3,9 +3,13 @@
 
   const cfg = () => window.MO.Config;
 
+  function authHeaders(): Record<string, string> {
+    return window.MO.Auth?.authHeader?.() ?? {};
+  }
+
   async function getJson<T>(path: string): Promise<T> {
     const res = await fetch(cfg().apiUrl(path), {
-      headers: { Accept: "application/json", ...window.MO.Auth.authHeader() },
+      headers: { Accept: "application/json", ...authHeaders() },
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || res.statusText);
