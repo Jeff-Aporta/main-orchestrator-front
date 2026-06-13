@@ -13,33 +13,7 @@ body {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: 1rem 1.25rem 1.5rem;
-}
-
-.catalog-hero {
-  border-radius: 16px !important;
-  padding: 1.25rem 1.5rem !important;
-  margin-bottom: 1.25rem;
-  border: 1px solid rgba(30, 144, 255, 0.22) !important;
-  background: linear-gradient(135deg, rgba(30, 144, 255, 0.08), rgba(99, 102, 241, 0.05)) !important;
-  box-shadow: 0 12px 40px rgba(30, 144, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-}
-
-html[data-mui-color-scheme="light"] .catalog-hero {
-  border-color: rgba(30, 144, 255, 0.16) !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 247, 255, 0.88)) !important;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-}
-
-.catalog-hero__title {
-  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
-  letter-spacing: -0.02em;
-  background: linear-gradient(90deg, #1e90ff, #6366f1, #00e5ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 0.35rem;
+  padding: 1.25rem 1.25rem 1.5rem;
 }
 
 .catalog-grid {
@@ -115,9 +89,4 @@ html[data-mui-color-scheme="light"] .catalog-card__icon {
 .catalog-link-chip:hover {
   background: rgba(30, 144, 255, 0.16);
   box-shadow: 0 0 12px rgba(30, 144, 255, 0.2);
-}
-
-.catalog-routes-panel {
-  border-radius: 14px !important;
-  overflow: auto;
 }

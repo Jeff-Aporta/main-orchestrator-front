@@ -51,45 +51,18 @@
     );
   }
 
-  function RoutesTable({ routes }) {
-    return (
-      <MUI.Paper className="catalog-routes-panel" sx={{ p: 2, overflow: "auto" }}>
-        <MUI.Typography variant="subtitle1" gutterBottom>Tabla de enrutamiento</MUI.Typography>
-        <MUI.Table size="small">
-          <MUI.TableHead>
-            <MUI.TableRow>
-              {["Servicio", "Base", "Prefijos"].map((h) => <MUI.TableCell key={h}>{h}</MUI.TableCell>)}
-            </MUI.TableRow>
-          </MUI.TableHead>
-          <MUI.TableBody>
-            {routes.map((row) => (
-              <MUI.TableRow key={row.service + row.base}>
-                <MUI.TableCell>{row.service}</MUI.TableCell>
-                <MUI.TableCell>{row.base ? "Configurado" : "—"}</MUI.TableCell>
-                <MUI.TableCell>{(row.prefixes || []).join(", ")}</MUI.TableCell>
-              </MUI.TableRow>
-            ))}
-          </MUI.TableBody>
-        </MUI.Table>
-      </MUI.Paper>
-    );
-  }
-
   function App() {
     const Shell = window.ISAFront.Layout.AppShell;
     const [catalog, setCatalog] = React.useState(null);
-    const [routes, setRoutes] = React.useState([]);
     const [err, setErr] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    const [showRoutes, setShowRoutes] = React.useState(false);
 
     const reload = React.useCallback(async () => {
       setLoading(true);
       setErr("");
       try {
-        const [cat, r] = await Promise.all([window.MO.Api.catalog(), window.MO.Api.routes()]);
+        const cat = await window.MO.Api.catalog();
         setCatalog(cat);
-        setRoutes(r.routes || []);
       } catch (e) {
         setErr(e instanceof Error ? e.message : String(e));
       } finally {
@@ -105,29 +78,10 @@
     }, [reload]);
 
     const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
-    const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure" || showRoutes);
-    const envLabel = window.MO.Config.isLocal() ? "Local" : "Producción";
+    const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure");
 
     const content = (
       <MUI.Box className="catalog-page">
-        <MUI.Paper className="catalog-hero" elevation={0}>
-          <MUI.Typography variant="h5" className="catalog-hero__title" gutterBottom>
-            Ecosistema Jeff-Aporta
-          </MUI.Typography>
-          <MUI.Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
-            {catalog?.note || "Enlaces por app: pantallas web y documentación de API."}
-          </MUI.Typography>
-          <MUI.Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center" useFlexGap>
-            <MUI.Chip size="small" label={"Entorno · " + envLabel} variant="outlined" />
-            <MUI.Button size="small" variant="contained" disabled={loading} onClick={reload}>Recargar</MUI.Button>
-            <MUI.Button size="small" variant="outlined" href={orchBase + "/ui"} target="_blank" rel="noopener noreferrer">
-              Documentación API
-            </MUI.Button>
-            <MUI.Button size="small" variant="text" onClick={() => setShowRoutes((v) => !v)}>
-              {showRoutes ? "Ocultar legacy" : "Mostrar legacy"}
-            </MUI.Button>
-          </MUI.Stack>
-        </MUI.Paper>
         {err ? <MUI.Alert severity="error" sx={{ mb: 2 }}>{err}</MUI.Alert> : null}
         {loading && !catalog ? (
           <MUI.Box sx={{ py: 4, textAlign: "center" }}>
@@ -142,7 +96,6 @@
             ))}
           </MUI.Grid>
         )}
-        {showRoutes ? <RoutesTable routes={routes} /> : null}
       </MUI.Box>
     );
 
