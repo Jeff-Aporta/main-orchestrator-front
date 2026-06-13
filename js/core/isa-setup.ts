@@ -7,10 +7,8 @@
     api: {
       local: "http://localhost:8780",
       online: "https://main-orchestrator.jeffaporta.workers.dev",
-      lsKey: "jeff:gateway-local",
-      event: "jeff:gateway-target",
     },
-    theme: { lsKey: "main-orchestrator:theme" },
+    theme: true,
     widgets: { targetStyle: "chip" },
   });
 

@@ -97,14 +97,18 @@
         outlined: ({ theme }: { theme: { palette: { mode: string } } }) =>
           theme.palette.mode === "dark"
             ? {
-                background: "linear-gradient(145deg, rgba(15,34,54,0.78), rgba(11,18,32,0.9))",
-                borderColor: "rgba(30,144,255,0.22)",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)",
+                background: "rgba(15, 34, 54, 0.42)",
+                borderColor: "rgba(30,144,255,0.28)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.05)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
               }
             : {
-                background: "linear-gradient(145deg, rgba(255,255,255,0.95), rgba(240,247,255,0.88))",
-                borderColor: "rgba(30,144,255,0.16)",
-                boxShadow: "0 8px 28px rgba(15,23,42,0.06)",
+                background: "rgba(255, 255, 255, 0.52)",
+                borderColor: "rgba(30,144,255,0.18)",
+                boxShadow: "0 8px 28px rgba(15,23,42,0.06), inset 0 1px 0 rgba(255,255,255,0.65)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
               },
       },
     },

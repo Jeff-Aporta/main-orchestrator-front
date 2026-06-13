@@ -17,5 +17,3 @@
 - **Cards** por app con enlace a su panel en GitHub Pages
 - Copiar URL y abrir en nueva pestaña
 - Tabla resumen del ecosistema
-
-Icono: `mdi:transit-connection-variant` · tema `#1565c0`
