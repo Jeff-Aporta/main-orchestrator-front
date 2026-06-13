@@ -19,8 +19,16 @@
     );
   }
 
-  function AppCard({ app, orchBase }) {
+  function apiLinks(app, orchBase) {
+    if (Array.isArray(app.backends) && app.backends.length) {
+      return app.backends.filter((b) => b.swaggerUrl);
+    }
     const swagger = swaggerHref(app, orchBase);
+    return swagger ? [{ label: "Swagger", swaggerUrl: swagger }] : [];
+  }
+
+  function AppCard({ app, orchBase }) {
+    const apis = apiLinks(app, orchBase);
     return (
       <MUI.Card variant="outlined" className="catalog-card" elevation={0}>
         <MUI.CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", pb: "12px !important" }}>
@@ -40,10 +48,12 @@
           <MUI.Typography variant="body2" color="text.secondary" sx={{ flex: 1, lineHeight: 1.55 }}>
             {app.description}
           </MUI.Typography>
-          {(app.frontUrl || swagger) ? (
+          {(app.frontUrl || apis.length) ? (
             <div className="catalog-card__links">
               <LinkChip label="Front" url={app.frontUrl} icon="mdi:monitor-dashboard" />
-              <LinkChip label="Swagger" url={swagger} icon="mdi:api" />
+              {apis.map((b) => (
+                <LinkChip key={b.label} label={b.label} url={b.swaggerUrl} icon="mdi:api" />
+              ))}
             </div>
           ) : null}
         </MUI.CardContent>
