@@ -5,7 +5,7 @@
   const BOOT_HELPER =
     "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@566a93f/cdn/boot-helper.mjs?v=566a93f";
 
-  const FILES = ["js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
+  const FILES = ["js/core/neon-theme.ts", "js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
 
 
 

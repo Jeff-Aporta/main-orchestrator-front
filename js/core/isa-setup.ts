@@ -13,4 +13,13 @@
     theme: { lsKey: "main-orchestrator:theme" },
     widgets: { targetStyle: "chip" },
   });
+
+  const neon = (globalThis as unknown as { MONeonTheme?: { useThemeMode: () => unknown; makeNeonTheme: (m: string) => unknown } }).MONeonTheme;
+  if (neon && window.MO?.Theme) {
+    window.MO.Theme = {
+      ...window.MO.Theme,
+      useThemeMode: neon.useThemeMode,
+      makeTheme: neon.makeNeonTheme,
+    };
+  }
 })();

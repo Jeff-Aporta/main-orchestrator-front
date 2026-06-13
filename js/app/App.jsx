@@ -4,79 +4,56 @@
   const MUI = MaterialUI;
   const UI = window.MO.UI;
 
-  function CopyLink({ label, url }) {
-    const [done, setDone] = React.useState(false);
-    if (!url) return null;
-    return (
-      <MUI.Stack direction="row" spacing={0.5} alignItems="center" sx={{ py: 0.25 }}>
-        <MUI.Typography variant="caption" color="text.secondary" sx={{ minWidth: 72 }}>{label}</MUI.Typography>
-        <MUI.IconButton
-          size="small"
-          aria-label={"Copiar enlace de " + label}
-          onClick={() => { navigator.clipboard.writeText(url); setDone(true); setTimeout(() => setDone(false), 1200); }}
-        >
-          <UI.Icon icon={done ? "mdi:check" : "mdi:content-copy"} size={14} />
-        </MUI.IconButton>
-        <MUI.IconButton size="small" component="a" href={url} target="_blank" rel="noopener noreferrer" aria-label={"Abrir " + label}>
-          <UI.Icon icon="mdi:open-in-new" size={14} />
-        </MUI.IconButton>
-      </MUI.Stack>
-    );
-  }
-
   function swaggerHref(app, orchBase) {
     if (app.id === "main-orchestrator") return orchBase.replace(/\/$/, "") + "/ui";
     return (app.swaggerUrl || "").trim();
   }
 
+  function LinkChip({ label, url, icon }) {
+    if (!url) return null;
+    return (
+      <a className="catalog-link-chip" href={url} target="_blank" rel="noopener noreferrer">
+        <UI.Icon icon={icon} size={13} />
+        {label}
+      </a>
+    );
+  }
+
   function AppCard({ app, orchBase }) {
     const swagger = swaggerHref(app, orchBase);
     return (
-      <MUI.Card variant="outlined" sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-        <MUI.CardContent sx={{ flex: 1 }}>
-          <MUI.Stack direction="row" spacing={1} alignItems="flex-start" sx={{ mb: 1 }}>
-            <UI.Icon icon={app.icon || "mdi:application-outline"} size={28} />
+      <MUI.Card variant="outlined" className="catalog-card" elevation={0}>
+        <MUI.CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", pb: "12px !important" }}>
+          <MUI.Stack direction="row" spacing={1.25} alignItems="flex-start" sx={{ mb: 1 }}>
+            <span className="catalog-card__icon">
+              <UI.Icon icon={app.icon || "mdi:application-outline"} size={26} />
+            </span>
             <MUI.Box sx={{ flex: 1, minWidth: 0 }}>
-              <MUI.Typography variant="h6" component="h2" sx={{ fontSize: "1rem", lineHeight: 1.3 }}>{app.name}</MUI.Typography>
-              {app.infra ? <MUI.Chip size="small" label="infra" sx={{ mt: 0.5 }} /> : null}
+              <MUI.Typography variant="h6" component="h2" sx={{ fontSize: "1rem", lineHeight: 1.3, fontWeight: 700 }}>
+                {app.name}
+              </MUI.Typography>
+              {app.infra ? (
+                <MUI.Chip size="small" label="infra" variant="outlined" sx={{ mt: 0.5, height: 22, fontSize: "0.68rem" }} />
+              ) : null}
             </MUI.Box>
           </MUI.Stack>
-          <MUI.Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>{app.description}</MUI.Typography>
-          {app.frontUrl ? <CopyLink label="Front" url={app.frontUrl} /> : null}
-          {swagger ? <CopyLink label="Swagger" url={swagger} /> : null}
-          {app.orchestratorPrefixes && app.orchestratorPrefixes.length ? (
-            <MUI.Box sx={{ mt: 1 }}>
-              <MUI.Typography variant="caption" color="text.secondary" display="block" gutterBottom>
-                Prefijos de API
-              </MUI.Typography>
-              <MUI.Stack direction="row" flexWrap="wrap" gap={0.5}>
-                {app.orchestratorPrefixes.slice(0, 6).map((p) => (
-                  <MUI.Chip key={p} size="small" label={p} variant="outlined" />
-                ))}
-                {app.orchestratorPrefixes.length > 6
-                  ? <MUI.Chip size="small" label={"+" + (app.orchestratorPrefixes.length - 6)} />
-                  : null}
-              </MUI.Stack>
-            </MUI.Box>
+          <MUI.Typography variant="body2" color="text.secondary" sx={{ flex: 1, lineHeight: 1.55 }}>
+            {app.description}
+          </MUI.Typography>
+          {(app.frontUrl || swagger) ? (
+            <div className="catalog-card__links">
+              <LinkChip label="Front" url={app.frontUrl} icon="mdi:monitor-dashboard" />
+              <LinkChip label="Swagger" url={swagger} icon="mdi:api" />
+            </div>
           ) : null}
         </MUI.CardContent>
-        {swagger || app.frontUrl ? (
-          <MUI.CardActions sx={{ pt: 0 }}>
-            {swagger ? (
-              <MUI.Button size="small" href={swagger} target="_blank" rel="noopener noreferrer">Abrir Swagger</MUI.Button>
-            ) : null}
-            {app.frontUrl ? (
-              <MUI.Button size="small" href={app.frontUrl} target="_blank" rel="noopener noreferrer">Abrir front</MUI.Button>
-            ) : null}
-          </MUI.CardActions>
-        ) : null}
       </MUI.Card>
     );
   }
 
   function RoutesTable({ routes }) {
     return (
-      <MUI.Paper sx={{ p: 2, overflow: "auto" }}>
+      <MUI.Paper className="catalog-routes-panel" sx={{ p: 2, overflow: "auto" }}>
         <MUI.Typography variant="subtitle1" gutterBottom>Tabla de enrutamiento</MUI.Typography>
         <MUI.Table size="small">
           <MUI.TableHead>
@@ -129,17 +106,18 @@
 
     const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
     const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure" || showRoutes);
-
     const envLabel = window.MO.Config.isLocal() ? "Local" : "Producción";
 
     const content = (
-      <MUI.Container maxWidth="lg" sx={{ py: 2 }}>
-        <MUI.Paper sx={{ p: 2, mb: 2 }}>
-          <MUI.Typography variant="h5" gutterBottom>Ecosistema Jeff-Aporta</MUI.Typography>
-          <MUI.Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+      <MUI.Box className="catalog-page">
+        <MUI.Paper className="catalog-hero" elevation={0}>
+          <MUI.Typography variant="h5" className="catalog-hero__title" gutterBottom>
+            Ecosistema Jeff-Aporta
+          </MUI.Typography>
+          <MUI.Typography variant="body2" color="text.secondary" sx={{ mb: 1.25 }}>
             {catalog?.note || "Enlaces por app: pantallas web y documentación de API."}
           </MUI.Typography>
-          <MUI.Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center">
+          <MUI.Stack direction="row" spacing={1} flexWrap="wrap" alignItems="center" useFlexGap>
             <MUI.Chip size="small" label={"Entorno · " + envLabel} variant="outlined" />
             <MUI.Button size="small" variant="contained" disabled={loading} onClick={reload}>Recargar</MUI.Button>
             <MUI.Button size="small" variant="outlined" href={orchBase + "/ui"} target="_blank" rel="noopener noreferrer">
@@ -156,7 +134,7 @@
             <MUI.CircularProgress size={32} />
           </MUI.Box>
         ) : (
-          <MUI.Grid container spacing={2} sx={{ mb: 2 }}>
+          <MUI.Grid container spacing={2} className="catalog-grid">
             {apps.map((app) => (
               <MUI.Grid key={app.id} size={{ xs: 12, sm: 6, md: 4 }}>
                 <AppCard app={app} orchBase={orchBase} />
@@ -165,11 +143,11 @@
           </MUI.Grid>
         )}
         {showRoutes ? <RoutesTable routes={routes} /> : null}
-      </MUI.Container>
+      </MUI.Box>
     );
 
     return (
-      <Shell ns="MO" title="Catálogo del ecosistema" icon="mdi:transit-connection-variant" loginGate={false}>
+      <Shell ns="MO" title="Catálogo del ecosistema" icon="mdi:transit-connection-variant" loginGate={false} bodyScroll>
         {content}
       </Shell>
     );
