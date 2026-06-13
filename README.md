@@ -19,5 +19,3 @@
 - Tabla resumen del ecosistema
 
 Icono: `mdi:transit-connection-variant` · tema `#1565c0`
-
-MIT · [Jeff-Aporta](https://github.com/Jeff-Aporta)
