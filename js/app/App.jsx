@@ -13,8 +13,8 @@
     if (!url) return null;
     return (
       <a className="catalog-link-chip" href={url} target="_blank" rel="noopener noreferrer">
-        <UI.Icon icon={icon} size={13} />
-        {label}
+        <UI.Icon icon={icon} size={14} />
+        <span className="catalog-link-chip__label">{label}</span>
       </a>
     );
   }
@@ -52,7 +52,7 @@
             <div className="catalog-card__links">
               <LinkChip label="Front" url={app.frontUrl} icon="mdi:monitor-dashboard" />
               {apis.map((b) => (
-                <LinkChip key={b.label} label={b.label} url={b.swaggerUrl} icon="mdi:api" />
+                <LinkChip key={b.label} label={b.label} url={b.swaggerUrl} icon="mdi:book-open-page-variant" />
               ))}
             </div>
           ) : null}
@@ -88,7 +88,7 @@
     }, [reload]);
 
     const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
-    const apps = (catalog?.apps || []).filter((a) => a.id !== "langlab-azure");
+    const apps = catalog?.apps || [];
 
     const content = (
       <MUI.Box className="catalog-page">
