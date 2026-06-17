@@ -1,0 +1,13 @@
+/** Auto-generado por gen-boot-preview.mjs — no editar a mano */
+(function () {
+  "use strict";
+  window.MO = window.MO || {};
+  window.MO.VizCatalogData = {
+    VIZ_FRAME_W: 1280,
+    VIZ_FRAME_H: 720,
+    VIZ_MOBILE_FRAME_W: 400,
+    VIZ_MOBILE_FRAME_H: 711,
+    VIZ_PERSONAL_APPS: [{"id":"cf-ai","name":"CF-AI","icon":"mdi:cloud-sync-outline","localUrl":"../../cf-ai/frontend/","prodUrl":"https://jeff-aporta.github.io/cf-ai-front/","index":0},{"id":"conversations","name":"Conversations","icon":"mdi:forum-outline","localUrl":"../../conversations/frontend/","prodUrl":"https://jeff-aporta.github.io/conversations-front/","index":1},{"id":"flsjeff","name":"flsjeff","icon":"mdi:cloud-upload-outline","localUrl":"../../flsjeff/frontend/","prodUrl":"https://jeff-aporta.github.io/flsjeff-front/","index":2},{"id":"iatools","name":"IA Tools","icon":"mdi:robot-outline","localUrl":"../../iatools/frontend/","prodUrl":"https://jeff-aporta.github.io/iatools-front/","index":3},{"id":"isa-patyia","name":"ISA PatyIA","icon":"mdi:robot-happy-outline","localUrl":"../../isa-patyia/frontend/","prodUrl":"https://jeff-aporta.github.io/isa-patyia/","index":4},{"id":"jagudeloe","name":"JAGUDELOE","icon":"mdi:notebook-outline","localUrl":"../../jagudeloe/frontend/","prodUrl":"https://jeff-aporta.github.io/jagudeloe-front/","index":5},{"id":"screenshot","name":"Visor capturas","icon":"mdi:image-multiple-outline","localUrl":"../../src/screenshot/","prodUrl":"https://jeff-aporta.github.io/tools/screenshot-viewer/","index":6},{"id":"system-login","name":"System Login","icon":"mdi:shield-key-outline","localUrl":"../../system-login/frontend/","prodUrl":"https://jeff-aporta.github.io/system-login-front/","index":7}],
+    VIZ_INSOFT_APPS: [{"id":"clientesis","name":"Clientes IS","icon":"mdi:account-group-outline","url":"https://clientesis.azurewebsites.net/","index":0},{"id":"contapyme-soporte","name":"Soporte ContaPyme","icon":"mdi:lifebuoy","url":"https://www.contapyme.com/soporte-staging/","index":1}],
+  };
+})();

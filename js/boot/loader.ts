@@ -7,7 +7,16 @@
     ? "../../front-shared/cdn/boot-helper.mjs"
     : "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@" + FRONT_SHARED_REF + "/cdn/boot-helper.mjs?v=" + FRONT_SHARED_REF;
 
-  const FILES = ["js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
+  const FILES = [
+    "js/core/viz-catalog-data.ts",
+    "js/core/viz-state.ts",
+    "js/core/isa-setup.ts",
+    "js/core/urlState.ts",
+    "js/api/client.ts",
+    "js/views/CatalogView.jsx",
+    "js/views/VizPanel.jsx",
+    "js/app/App.jsx",
+  ];
 
   async function boot(): Promise<void> {
     const { bootApp } = await import(BOOT_HELPER);

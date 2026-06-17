@@ -2,7 +2,7 @@
   "meta": {
     "title": "Catálogo del ecosistema — Jeff-Aporta",
     "applicationName": "Catálogo",
-    "description": "Enlaces a todas las aplicaciones del ecosistema Jeff-Aporta.",
+    "description": "Catálogo del ecosistema Jeff-Aporta y panel de visualización en vivo de fronts.",
     "keywords": "aplicaciones, ecosistema, Jeff-Aporta, ISA, PatyIA",
     "themeColor": "#1e90ff",
     "themeLsKey": "main-orchestrator:theme",
@@ -18,7 +18,8 @@
     "shared-base",
     "shared-neon-theme",
     "fonts-google",
-    "local:css/app.css"
+    "local:css/app.css",
+    "local:css/viz-panel.css"
   ],
   "libs": []
 }
