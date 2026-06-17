@@ -110,7 +110,7 @@
     );
 
     return (
-      <Shell ns="MO" title="Catálogo del ecosistema" icon="mdi:transit-connection-variant" loginGate={false} bodyScroll>
+      <Shell ns="MO" loginGate={false} bodyScroll>
         {content}
       </Shell>
     );
