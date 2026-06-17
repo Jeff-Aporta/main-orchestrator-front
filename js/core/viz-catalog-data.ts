@@ -1,4 +1,4 @@
-/** Auto-generado por gen-boot-preview.mjs — no editar a mano */
+/** Auto-generado por gen-viz-catalog.mjs — no editar a mano */
 (function () {
   "use strict";
   window.MO = window.MO || {};

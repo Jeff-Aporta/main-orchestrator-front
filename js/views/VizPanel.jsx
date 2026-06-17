@@ -16,7 +16,7 @@
   const INSOFT_VIZ_IDS = ["clientesis", "contapyme-soporte"];
 
   function isMonorepoDev() {
-    return /localhost|127\.0\.0\.1|\[::1\]/.test(location.hostname) && /\/apps\//.test(location.pathname);
+    return Viz.allowsPersonalLocalContext();
   }
 
   function insoftAppUrl(app) {
@@ -56,7 +56,7 @@
   }
 
   function canToggleContext(app, group) {
-    return group === "personal" && !!app.localUrl;
+    return group === "personal" && !!app.localUrl && isMonorepoDev();
   }
 
   function toAbsoluteUrl(url) {
@@ -79,10 +79,9 @@
     }
   }
 
-  function VizIframeUrlBar({ iframeSrc, openUrl, urlLabel }) {
+  function VizIframeUrlBar({ iframeSrc, openUrl }) {
     const absIframe = toAbsoluteUrl(iframeSrc);
     const absOpen = openUrl ? toAbsoluteUrl(openUrl) : "";
-    const label = urlLabel || "iframe";
     const sameUrl = !absOpen || absOpen === absIframe;
     const primaryUrl = sameUrl ? (absOpen || absIframe) : absIframe;
     const [copied, setCopied] = React.useState(false);
@@ -116,10 +115,16 @@
 
     return (
       <div className="viz-card-urlbar" role="status" aria-label={"URL: " + primaryUrl}>
-        <span className="viz-card-urlbar-icon" aria-hidden="true">
-          <UI.Icon icon="mdi:link-variant" size={14} />
-        </span>
-        <span className="viz-card-urlbar-kicker">{label}</span>
+        <MUI.Tooltip title={copied ? "Copiado" : "Copiar URL"} arrow placement="top">
+          <MUI.IconButton
+            size="small"
+            className="viz-urlbar-icon-btn"
+            aria-label={copied ? "URL copiada" : "Copiar URL"}
+            onClick={copyUrl}
+          >
+            <UI.Icon icon={copied ? "mdi:check" : "mdi:link-variant"} size={14} />
+          </MUI.IconButton>
+        </MUI.Tooltip>
         <MUI.Tooltip title={primaryUrl} arrow placement="top">
           <a
             className="viz-card-urlbar-link"
@@ -133,7 +138,6 @@
         {!sameUrl && absOpen ? (
           <>
             <span className="viz-card-urlbar-sep" aria-hidden="true">·</span>
-            <span className="viz-card-urlbar-kicker">abrir</span>
             <MUI.Tooltip title={absOpen} arrow placement="top">
               <a
                 className="viz-card-urlbar-link viz-card-urlbar-link--target"
@@ -146,16 +150,6 @@
             </MUI.Tooltip>
           </>
         ) : null}
-        <MUI.Tooltip title={copied ? "Copiado" : "Copiar URL"} arrow>
-          <MUI.IconButton
-            size="small"
-            className="viz-urlbar-copy"
-            aria-label="Copiar URL"
-            onClick={copyUrl}
-          >
-            <UI.Icon icon={copied ? "mdi:check" : "mdi:content-copy"} size={14} />
-          </MUI.IconButton>
-        </MUI.Tooltip>
       </div>
     );
   }
@@ -432,7 +426,8 @@
     const [desktopW, setDesktopW] = React.useState(DEFAULT_DESKTOP_W);
     const desktopH = Viz.desktopHeight(desktopW);
     const contextControlled = contextUseLocal != null && typeof onContextUseLocalChange === "function";
-    const useLocal = contextControlled ? contextUseLocal : isMonorepoDev();
+    const allowsLocal = isMonorepoDev();
+    const useLocal = allowsLocal && (contextControlled ? contextUseLocal : true);
     const contextToggle = canToggleContext(app, group);
     const prevLocalRef = React.useRef(useLocal);
     const cardRef = React.useRef(null);
@@ -571,7 +566,6 @@
             <VizIframeUrlBar
               iframeSrc={src}
               openUrl={openUrl}
-              urlLabel={group === "insoft" ? "URL" : "iframe"}
             />
             <div className="viz-card-previews">
               <div className="viz-preview viz-preview--desktop">
@@ -755,17 +749,21 @@
       return { personal: [...bootViz.order.personal], insoft: [...bootViz.order.insoft] };
     });
     const [prodMap, setProdMap] = React.useState({});
-    const [personalUseLocal, setPersonalUseLocal] = React.useState(bootViz.personalUseLocal);
+    const [personalUseLocal, setPersonalUseLocal] = React.useState(function () {
+      return isMonorepoDev() ? bootViz.personalUseLocal : false;
+    });
     const [scrollToAppId, setScrollToAppId] = React.useState(null);
 
     function persistViz(nextOrder, nextPersonalUseLocal) {
-      const vz = UrlState.serializeViz(nextOrder, nextPersonalUseLocal);
+      const useLocal = isMonorepoDev() ? nextPersonalUseLocal : false;
+      const vz = UrlState.serializeViz(nextOrder, useLocal);
       const snap = UrlState.getSnapshot();
       if (UrlState.vizEqual(snap.vz, vz)) return;
       UrlState.mergePartial({ vz: vz || null });
     }
 
     function setAllPersonalContext(next) {
+      if (!isMonorepoDev()) return;
       const useLocal = typeof next === "boolean" ? next : !personalUseLocal;
       setPersonalUseLocal(useLocal);
       persistViz(order, useLocal);
@@ -776,14 +774,21 @@
     }
 
     React.useEffect(function () {
+      if (isMonorepoDev()) return;
+      if (!personalUseLocal) return;
+      setPersonalUseLocal(false);
+      persistViz(order, false);
+    }, []);
+
+    React.useEffect(function () {
       const personalIds = personalApps.map(function (a) { return a.id; });
       const insoftIds = insoftApps.map(function (a) { return a.id; });
       const o = { personal: [...order.personal], insoft: [...order.insoft] };
-      const before = UrlState.serializeViz(o, personalUseLocal);
+      const before = UrlState.serializeViz(o, isMonorepoDev() ? personalUseLocal : false);
       Viz.ensureOrderIds(o, personalIds, insoftIds);
       setWatch(Viz.buildWatchFromOrder(o, personalIds, insoftIds));
       setOrder(o);
-      if (!UrlState.vizEqual(before, UrlState.serializeViz(o, personalUseLocal))) {
+      if (!UrlState.vizEqual(before, UrlState.serializeViz(o, isMonorepoDev() ? personalUseLocal : false))) {
         persistViz(o, personalUseLocal);
       }
     }, [insoftApps]);
@@ -849,9 +854,9 @@
           prodMap={prodMap}
           onToggleWatch={(id, on) => onToggleWatch("personal", id, on)}
           onMoveOrder={onMoveOrder}
-          contextUseLocal={personalUseLocal}
-          onToggleAllContext={toggleAllPersonalContext}
-          onContextUseLocalChange={setAllPersonalContext}
+          contextUseLocal={isMonorepoDev() ? personalUseLocal : false}
+          onToggleAllContext={isMonorepoDev() ? toggleAllPersonalContext : null}
+          onContextUseLocalChange={isMonorepoDev() ? setAllPersonalContext : null}
           scrollToAppId={scrollToAppId}
           onScrollToCardDone={clearScrollToCard}
         />

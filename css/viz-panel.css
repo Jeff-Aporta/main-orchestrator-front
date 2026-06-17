@@ -249,19 +249,17 @@
   flex-wrap: nowrap;
 }
 
-.viz-card-urlbar-icon {
-  display: inline-flex;
+.viz-urlbar-icon-btn {
   flex-shrink: 0;
-  color: rgba(148, 163, 184, 0.9);
+  padding: 4px !important;
+  margin: 0 -2px 0 0;
+  opacity: 0.85;
+  color: rgba(148, 163, 184, 0.9) !important;
 }
 
-.viz-card-urlbar-kicker {
-  flex-shrink: 0;
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: rgba(148, 163, 184, 0.75);
+.viz-urlbar-icon-btn:hover {
+  opacity: 1;
+  color: #93c5fd !important;
 }
 
 .viz-card-urlbar-link {
@@ -286,18 +284,6 @@
   flex-shrink: 0;
   color: rgba(148, 163, 184, 0.45);
   margin: 0 0.05rem;
-}
-
-.viz-urlbar-copy {
-  margin-left: auto !important;
-  flex-shrink: 0;
-  padding: 4px !important;
-  opacity: 0.75;
-}
-
-.viz-urlbar-copy:hover {
-  opacity: 1;
-  color: #93c5fd !important;
 }
 
 .viz-card-previews {

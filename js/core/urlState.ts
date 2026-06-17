@@ -109,11 +109,15 @@
     const order = Viz.defaultOrder();
     if (vz?.p?.length) order.personal = vz.p.slice();
     if (vz?.i?.length) order.insoft = vz.i.slice();
-    const personalUseLocal = vz?.l === true
-      ? true
-      : vz?.l === false
-        ? false
-        : Viz.defaultPersonalUseLocal();
+    const allowsLocal = Viz.allowsPersonalLocalContext();
+    let personalUseLocal = false;
+    if (allowsLocal) {
+      personalUseLocal = vz?.l === true
+        ? true
+        : vz?.l === false
+          ? false
+          : Viz.defaultPersonalUseLocal();
+    }
     return { order, personalUseLocal };
   }
 
