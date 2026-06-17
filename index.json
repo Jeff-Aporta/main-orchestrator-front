@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "title": "Catálogo del ecosistema — Jeff-Aporta",
+    "applicationName": "Catálogo",
+    "description": "Enlaces a todas las aplicaciones del ecosistema Jeff-Aporta.",
+    "keywords": "aplicaciones, ecosistema, Jeff-Aporta, ISA, PatyIA",
+    "themeColor": "#1e90ff",
+    "themeLsKey": "main-orchestrator:theme",
+    "icon": "mdi:transit-connection-variant",
+    "canonical": "https://jeff-aporta.github.io/main-orchestrator-front/",
+    "ogSiteName": "Jeff-Aporta — Catálogo",
+    "ogTitle": "Catálogo del ecosistema — Jeff-Aporta",
+    "imageAlt": "Catálogo del ecosistema Jeff-Aporta"
+  },
+  "themeInit": true,
+  "appMeta": true,
+  "styles": [
+    "shared-base",
+    "shared-neon-theme",
+    "fonts-google",
+    "local:css/app.css"
+  ],
+  "libs": []
+}
