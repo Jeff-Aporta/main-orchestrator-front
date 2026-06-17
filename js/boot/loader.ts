@@ -1,41 +1,26 @@
 (function () {
-
   "use strict";
 
-  const BOOT_HELPER =
-    "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@7921b9c/cdn/boot-helper.mjs?v=9e576a1";
+  const FRONT_SHARED_REF = "9b5af5c";
+  const isLocalDev = /localhost|127\.0\.0\.1|\[::1\]/.test(location.hostname);
+  const BOOT_HELPER = isLocalDev
+    ? "../../front-shared/cdn/boot-helper.mjs"
+    : "https://cdn.jsdelivr.net/gh/Jeff-Aporta/front-shared@" + FRONT_SHARED_REF + "/cdn/boot-helper.mjs?v=" + FRONT_SHARED_REF;
 
-  const FILES = ["js/core/neon-theme.ts", "js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
-
-
+  const FILES = ["js/core/isa-setup.ts", "js/api/client.ts", "js/app/App.jsx"];
 
   async function boot(): Promise<void> {
-
     const { bootApp } = await import(BOOT_HELPER);
-
     await bootApp({ files: FILES, Babel });
-
   }
-
-
 
   function showErr(err: unknown): void {
-
     const root = document.getElementById("root");
-
     const msg = err instanceof Error ? err.stack || err.message : String(err);
-
     if (root) root.innerHTML = '<pre style="color:#ff8a80;padding:24px;font-family:monospace">Error de arranque:\n' + msg + "</pre>";
-
     console.error(err);
-
   }
 
-
-
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => boot().catch(showErr));
-
   else boot().catch(showErr);
-
 })();
-
