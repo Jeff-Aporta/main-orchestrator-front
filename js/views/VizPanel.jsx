@@ -521,7 +521,7 @@
           <h2 className="viz-card-title">{app.name}</h2>
           <MUI.Chip label={app.id} size="small" variant="outlined" className="viz-card-slug" />
           <div className="viz-card-actions">
-            {watched && contextToggle ? (
+            {contextToggle ? (
               <VizContextToggle useLocal={useLocal} onToggle={toggleContext} />
             ) : null}
             {watched ? (
@@ -722,6 +722,8 @@
                   watched={false}
                   prodMap={prodMap}
                   onToggleWatch={onToggleWatch}
+                  contextUseLocal={contextUseLocal}
+                  onContextUseLocalChange={onContextUseLocalChange}
                 />
               ))}
             </div>
