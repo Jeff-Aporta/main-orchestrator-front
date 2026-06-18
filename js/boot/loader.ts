@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const FRONT_SHARED_REF = "bcc5453";
+  const FRONT_SHARED_REF = "a5a6597";
   const isLocalDev = /localhost|127\.0\.0\.1|\[::1\]/.test(location.hostname);
   const BOOT_HELPER = isLocalDev
     ? "../../front-shared/cdn/boot-helper.mjs"
