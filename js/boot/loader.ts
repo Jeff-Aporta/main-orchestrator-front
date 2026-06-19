@@ -14,6 +14,7 @@
     "js/core/urlState.ts",
     "js/api/client.ts",
     "js/views/CatalogView.jsx",
+    "js/views/ComponentesView.jsx",
     "js/views/VizPanel.jsx",
     "js/app/App.jsx",
   ];

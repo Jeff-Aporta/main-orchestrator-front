@@ -97,7 +97,6 @@
 
     const sections = [
       { key: "app", title: "Aplicaciones", apps: apps.filter((a) => categoryOf(a) === "app") },
-      { key: "component", title: "Componentes ISA", apps: apps.filter((a) => categoryOf(a) === "component") },
       { key: "infra", title: "Infraestructura", apps: apps.filter((a) => categoryOf(a) === "infra") },
     ].filter((s) => s.apps.length);
 

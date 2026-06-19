@@ -5,7 +5,7 @@
   const STATE_VERSION = 1;
   const PARAM = "s";
 
-  type ViewId = "catalog" | "viz";
+  type ViewId = "catalog" | "viz" | "componentes";
   type VizUrlSlice = { p?: string[]; i?: string[]; c?: string[]; l?: boolean };
 
   function hasVizSlice(vz: VizUrlSlice): boolean {
@@ -39,7 +39,8 @@
   function normalize(raw: unknown): AppState {
     if (!raw || typeof raw !== "object") return initial();
     const o = raw as Record<string, unknown>;
-    const view: ViewId = o.view === "viz" ? "viz" : "catalog";
+    const view: ViewId =
+      o.view === "viz" ? "viz" : o.view === "componentes" ? "componentes" : "catalog";
     const vz = normalizeVizSlice(o.vz);
     const out: AppState = { v: typeof o.v === "number" ? o.v : STATE_VERSION, view };
     if (vz) out.vz = vz;
@@ -68,7 +69,14 @@
   function merge(state: AppState, partial: Partial<AppState>): AppState {
     const next: AppState = {
       v: state.v,
-      view: partial.view === "viz" ? "viz" : partial.view === "catalog" ? "catalog" : state.view,
+      view:
+        partial.view === "viz"
+          ? "viz"
+          : partial.view === "componentes"
+            ? "componentes"
+            : partial.view === "catalog"
+              ? "catalog"
+              : state.view,
     };
     if (state.vz) next.vz = { ...state.vz };
     if ("vz" in partial) {

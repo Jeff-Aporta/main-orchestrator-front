@@ -9,11 +9,12 @@
     const Shell = window.ISAFront.Layout.AppShell;
     const CatalogView = window.MO.CatalogView;
     const VizPanel = window.MO.VizPanel;
+    const ComponentesView = window.MO.ComponentesView;
     const [view, setView] = React.useState(UrlState.bootState.view || "catalog");
 
     React.useEffect(() => {
       return UrlState.subscribe((snap) => {
-        setView(snap.view === "viz" ? "viz" : "catalog");
+        setView(snap.view === "viz" ? "viz" : snap.view === "componentes" ? "componentes" : "catalog");
       });
     }, []);
 
@@ -27,16 +28,22 @@
     }, []);
 
     function selectView(id) {
-      const next = id === "viz" ? "viz" : "catalog";
+      const next = id === "viz" ? "viz" : id === "componentes" ? "componentes" : "catalog";
       setView(next);
       UrlState.mergePartial({ view: next });
+    }
+
+    function renderBody() {
+      if (view === "viz") return <VizPanel />;
+      if (view === "componentes") return <ComponentesView />;
+      return <CatalogView />;
     }
 
     return (
       <Shell
         ns="MO"
         loginGate={false}
-        bodyScroll={view === "catalog"}
+        bodyScroll={view === "catalog" || view === "componentes"}
         navRows={[
           {
             id: "main",
@@ -44,12 +51,13 @@
             onChange: selectView,
             tabs: [
               { id: "catalog", label: "Catálogo", icon: "mdi:view-grid-outline" },
+              { id: "componentes", label: "Componentes", icon: "mdi:puzzle-outline" },
               { id: "viz", label: "Visualización", icon: "mdi:monitor-dashboard" },
             ],
           },
         ]}
       >
-        {view === "catalog" ? <CatalogView /> : <VizPanel />}
+        {renderBody()}
       </Shell>
     );
   }
