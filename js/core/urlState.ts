@@ -6,10 +6,10 @@
   const PARAM = "s";
 
   type ViewId = "catalog" | "viz";
-  type VizUrlSlice = { p?: string[]; i?: string[]; l?: boolean };
+  type VizUrlSlice = { p?: string[]; i?: string[]; c?: string[]; l?: boolean };
 
   function hasVizSlice(vz: VizUrlSlice): boolean {
-    return !!(vz.p?.length || vz.i?.length || vz.l === true || vz.l === false);
+    return !!(vz.p?.length || vz.i?.length || vz.c?.length || vz.l === true || vz.l === false);
   }
   type AppState = { v: number; view: ViewId; vz?: VizUrlSlice };
 
@@ -26,6 +26,9 @@
     }
     if (Array.isArray(o.i)) {
       vz.i = o.i.filter((id): id is string => typeof id === "string" && !!id);
+    }
+    if (Array.isArray(o.c)) {
+      vz.c = o.c.filter((id): id is string => typeof id === "string" && !!id);
     }
     if (o.l === true) vz.l = true;
     if (o.l === false) vz.l = false;
@@ -48,6 +51,7 @@
     const out: VizUrlSlice = {};
     if (vz.p?.length) out.p = vz.p.slice(0, 24);
     if (vz.i?.length) out.i = vz.i.slice(0, 8);
+    if (vz.c?.length) out.c = vz.c.slice(0, 12);
     if (vz.l === true) out.l = true;
     if (vz.l === false) out.l = false;
     if (!hasVizSlice(out)) return undefined;
@@ -109,6 +113,7 @@
     const order = Viz.defaultOrder();
     if (vz?.p?.length) order.personal = vz.p.slice();
     if (vz?.i?.length) order.insoft = vz.i.slice();
+    if (vz?.c?.length) order.componentes = vz.c.slice();
     const allowsLocal = Viz.allowsPersonalLocalContext();
     let personalUseLocal = false;
     if (allowsLocal) {
@@ -132,16 +137,19 @@
     const pb = b?.p || [];
     const ia = a?.i || [];
     const ib = b?.i || [];
+    const ca = a?.c || [];
+    const cb = b?.c || [];
     const la = a?.l;
     const lb = b?.l;
     const sameLoc = la === lb || (la === undefined && lb === undefined);
-    return orderEqual(pa, pb) && orderEqual(ia, ib) && sameLoc;
+    return orderEqual(pa, pb) && orderEqual(ia, ib) && orderEqual(ca, cb) && sameLoc;
   }
 
-  function serializeViz(order: { personal: string[]; insoft: string[] }, personalUseLocal: boolean): VizUrlSlice | undefined {
+  function serializeViz(order: { personal: string[]; insoft: string[]; componentes: string[] }, personalUseLocal: boolean): VizUrlSlice | undefined {
     const vz: VizUrlSlice = { l: !!personalUseLocal };
     if (order.personal.length) vz.p = order.personal.slice();
     if (order.insoft.length) vz.i = order.insoft.slice();
+    if (order.componentes.length) vz.c = order.componentes.slice();
     return slimViz(vz);
   }
 

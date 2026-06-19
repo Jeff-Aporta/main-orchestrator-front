@@ -15,7 +15,7 @@
 
   const DESKTOP_WIDTHS = [1280, 900] as const;
 
-  type Group = "personal" | "insoft";
+  type Group = "personal" | "insoft" | "componentes";
   type WatchMap = Record<Group, Record<string, boolean>>;
   type OrderMap = Record<Group, string[]>;
 
@@ -28,11 +28,11 @@
   purgeLegacyStorage();
 
   function defaultWatch(): WatchMap {
-    return { personal: {}, insoft: {} };
+    return { personal: {}, insoft: {}, componentes: {} };
   }
 
   function defaultOrder(): OrderMap {
-    return { personal: [], insoft: [] };
+    return { personal: [], insoft: [], componentes: [] };
   }
 
   function allowsPersonalLocalContext(): boolean {
@@ -44,16 +44,18 @@
     return allowsPersonalLocalContext();
   }
 
-  function buildWatchFromOrder(order: OrderMap, personalIds: string[], insoftIds: string[]): WatchMap {
+  function buildWatchFromOrder(order: OrderMap, personalIds: string[], insoftIds: string[], componentIds: string[] = []): WatchMap {
     const watch = defaultWatch();
     for (const id of personalIds) watch.personal[id] = order.personal.includes(id);
     for (const id of insoftIds) watch.insoft[id] = order.insoft.includes(id);
+    for (const id of componentIds) watch.componentes[id] = order.componentes.includes(id);
     return watch;
   }
 
-  function ensureOrderIds(order: OrderMap, personalIds: string[], insoftIds: string[]): void {
+  function ensureOrderIds(order: OrderMap, personalIds: string[], insoftIds: string[], componentIds: string[] = []): void {
     order.personal = order.personal.filter((id) => personalIds.includes(id));
     order.insoft = order.insoft.filter((id) => insoftIds.includes(id));
+    order.componentes = order.componentes.filter((id) => componentIds.includes(id));
   }
 
   function desktopHeight(width: number): number {

@@ -89,6 +89,18 @@
     const orchBase = catalog?.orchestratorBase || window.MO.Config.base();
     const apps = catalog?.apps || [];
 
+    function categoryOf(app) {
+      if (app.category) return app.category;
+      if (app.infra) return "infra";
+      return "app";
+    }
+
+    const sections = [
+      { key: "app", title: "Aplicaciones", apps: apps.filter((a) => categoryOf(a) === "app") },
+      { key: "component", title: "Componentes ISA", apps: apps.filter((a) => categoryOf(a) === "component") },
+      { key: "infra", title: "Infraestructura", apps: apps.filter((a) => categoryOf(a) === "infra") },
+    ].filter((s) => s.apps.length);
+
     return (
       <MUI.Box className="catalog-page">
         {err ? <MUI.Alert severity="error" sx={{ mb: 2 }}>{err}</MUI.Alert> : null}
@@ -97,13 +109,20 @@
             <MUI.CircularProgress size={32} />
           </MUI.Box>
         ) : (
-          <MUI.Grid container spacing={2} className="catalog-grid">
-            {apps.map((app) => (
-              <MUI.Grid key={app.id} size={{ xs: 12, sm: 6, md: 4 }}>
-                <AppCard app={app} orchBase={orchBase} />
+          sections.map((section) => (
+            <MUI.Box key={section.key} sx={{ mb: 3 }}>
+              <MUI.Typography variant="h6" component="h2" sx={{ mb: 1.5, fontWeight: 700 }}>
+                {section.title}
+              </MUI.Typography>
+              <MUI.Grid container spacing={2} className="catalog-grid">
+                {section.apps.map((app) => (
+                  <MUI.Grid key={app.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                    <AppCard app={app} orchBase={orchBase} />
+                  </MUI.Grid>
+                ))}
               </MUI.Grid>
-            ))}
-          </MUI.Grid>
+            </MUI.Box>
+          ))
         )}
       </MUI.Box>
     );

@@ -43,6 +43,12 @@
 
   function resolveOpenUrl(app, group, prodMap, useLocal) {
     if (group === "insoft") return insoftAppUrl(app);
+    if (group === "personal" || group === "componentes") {
+      if (useLocal) return new URL(app.localUrl, location.href).href;
+      const prod = prodMap[app.id] || app.prodUrl;
+      if (prod) return prod;
+      return new URL(app.localUrl, location.href).href;
+    }
     if (useLocal) return new URL(app.localUrl, location.href).href;
     const prod = prodMap[app.id] || app.prodUrl;
     if (prod) return prod;
@@ -51,12 +57,16 @@
 
   function iframeSrcFor(app, group, prodMap, useLocal) {
     if (group === "insoft") return insoftAppUrl(app);
+    if (group === "personal" || group === "componentes") {
+      if (useLocal) return app.localUrl;
+      return prodMap[app.id] || app.prodUrl || app.localUrl;
+    }
     if (useLocal) return app.localUrl;
     return prodMap[app.id] || app.prodUrl || app.localUrl;
   }
 
   function canToggleContext(app, group) {
-    return group === "personal" && !!app.localUrl && isMonorepoDev();
+    return (group === "personal" || group === "componentes") && !!app.localUrl && isMonorepoDev();
   }
 
   function toAbsoluteUrl(url) {
@@ -735,6 +745,7 @@
 
   function VizPanel() {
     const personalApps = Data.VIZ_PERSONAL_APPS;
+    const componentApps = Data.VIZ_COMPONENT_APPS || [];
     const [insoftApps, setInsoftApps] = React.useState(function () {
       return buildInsoftApps(null);
     });
@@ -745,10 +756,15 @@
         bootViz.order,
         personalApps.map(function (a) { return a.id; }),
         [],
+        componentApps.map(function (a) { return a.id; }),
       );
     });
     const [order, setOrder] = React.useState(function () {
-      return { personal: [...bootViz.order.personal], insoft: [...bootViz.order.insoft] };
+      return {
+        personal: [...bootViz.order.personal],
+        insoft: [...bootViz.order.insoft],
+        componentes: [...bootViz.order.componentes],
+      };
     });
     const [prodMap, setProdMap] = React.useState({});
     const [personalUseLocal, setPersonalUseLocal] = React.useState(function () {
@@ -785,28 +801,30 @@
     React.useEffect(function () {
       const personalIds = personalApps.map(function (a) { return a.id; });
       const insoftIds = insoftApps.map(function (a) { return a.id; });
-      const o = { personal: [...order.personal], insoft: [...order.insoft] };
+      const componentIds = componentApps.map(function (a) { return a.id; });
+      const o = { personal: [...order.personal], insoft: [...order.insoft], componentes: [...order.componentes] };
       const before = UrlState.serializeViz(o, isMonorepoDev() ? personalUseLocal : false);
-      Viz.ensureOrderIds(o, personalIds, insoftIds);
-      setWatch(Viz.buildWatchFromOrder(o, personalIds, insoftIds));
+      Viz.ensureOrderIds(o, personalIds, insoftIds, componentIds);
+      setWatch(Viz.buildWatchFromOrder(o, personalIds, insoftIds, componentIds));
       setOrder(o);
       if (!UrlState.vizEqual(before, UrlState.serializeViz(o, isMonorepoDev() ? personalUseLocal : false))) {
         persistViz(o, personalUseLocal);
       }
-    }, [insoftApps]);
+    }, [insoftApps, componentApps]);
 
     React.useEffect(function () {
       return UrlState.subscribe(function (snap) {
         const personalIds = personalApps.map(function (a) { return a.id; });
         const insoftIds = insoftApps.map(function (a) { return a.id; });
+        const componentIds = componentApps.map(function (a) { return a.id; });
         const parsed = UrlState.parseVizSlice(snap.vz);
-        const o = { personal: [...parsed.order.personal], insoft: [...parsed.order.insoft] };
-        Viz.ensureOrderIds(o, personalIds, insoftIds);
-        setWatch(Viz.buildWatchFromOrder(o, personalIds, insoftIds));
+        const o = { personal: [...parsed.order.personal], insoft: [...parsed.order.insoft], componentes: [...parsed.order.componentes] };
+        Viz.ensureOrderIds(o, personalIds, insoftIds, componentIds);
+        setWatch(Viz.buildWatchFromOrder(o, personalIds, insoftIds, componentIds));
         setOrder(o);
         setPersonalUseLocal(parsed.personalUseLocal);
       });
-    }, [insoftApps, personalApps]);
+    }, [insoftApps, personalApps, componentApps]);
 
     React.useEffect(function () {
       window.MO.Api.catalog()
@@ -823,8 +841,8 @@
     }, []);
 
     function onToggleWatch(group, id, on) {
-      const w = { personal: { ...watch.personal }, insoft: { ...watch.insoft } };
-      const o = { personal: [...order.personal], insoft: [...order.insoft] };
+      const w = { personal: { ...watch.personal }, insoft: { ...watch.insoft }, componentes: { ...watch.componentes } };
+      const o = { personal: [...order.personal], insoft: [...order.insoft], componentes: [...order.componentes] };
       Viz.setWatched(w, o, group, id, on);
       setWatch(w);
       setOrder(o);
@@ -832,10 +850,15 @@
     }
 
     function onMoveOrder(group, id, delta) {
-      const o = { personal: [...order.personal], insoft: [...order.insoft] };
+      const o = { personal: [...order.personal], insoft: [...order.insoft], componentes: [...order.componentes] };
       Viz.moveOrder(o, group, id, delta);
       setOrder(o);
-      setWatch(Viz.buildWatchFromOrder(o, personalApps.map(function (a) { return a.id; }), insoftApps.map(function (a) { return a.id; })));
+      setWatch(Viz.buildWatchFromOrder(
+        o,
+        personalApps.map(function (a) { return a.id; }),
+        insoftApps.map(function (a) { return a.id; }),
+        componentApps.map(function (a) { return a.id; }),
+      ));
       setScrollToAppId(id);
       persistViz(o, personalUseLocal);
     }
@@ -873,6 +896,22 @@
           prodMap={prodMap}
           onToggleWatch={(id, on) => onToggleWatch("insoft", id, on)}
           onMoveOrder={onMoveOrder}
+          scrollToAppId={scrollToAppId}
+          onScrollToCardDone={clearScrollToCard}
+        />
+
+        <VizSection
+          title="Componentes ISA"
+          subtitle="@jeff-aporta"
+          group="componentes"
+          apps={componentApps}
+          watch={watch}
+          order={order}
+          prodMap={prodMap}
+          onToggleWatch={(id, on) => onToggleWatch("componentes", id, on)}
+          onMoveOrder={onMoveOrder}
+          contextUseLocal={isMonorepoDev() ? personalUseLocal : false}
+          onContextUseLocalChange={isMonorepoDev() ? setAllPersonalContext : null}
           scrollToAppId={scrollToAppId}
           onScrollToCardDone={clearScrollToCard}
         />
