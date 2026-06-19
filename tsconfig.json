@@ -12,6 +12,6 @@
   "include": [
     "js/**/*.ts",
     "js/**/*.tsx",
-    "../../front-shared/cdn/types/**/*.d.ts"
+    "../../components/front-shared/cdn/types/**/*.d.ts"
   ]
 }
