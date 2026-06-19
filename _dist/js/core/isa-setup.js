@@ -1,0 +1,1 @@
+(function(){"use strict";window.ISAFront.registerApp({ns:"MO",auth:!1,api:{local:"http://localhost:8780",online:"https://main-orchestrator.jeffaporta.workers.dev"},theme:!0,widgets:{targetStyle:"chip"}});const e=globalThis.MONeonTheme;e&&window.MO?.Theme&&(window.MO.Theme={...window.MO.Theme,useThemeMode:e.useThemeMode,makeTheme:e.makeNeonTheme})})();

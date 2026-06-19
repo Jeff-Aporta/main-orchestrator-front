@@ -1,0 +1,1 @@
+const o="main-orchestrator:theme";let e="dark";try{const t=localStorage.getItem(o);(t==="light"||t==="dark")&&(e=t)}catch{}document.documentElement.setAttribute("data-mui-color-scheme",e),document.documentElement.style.colorScheme=e;
