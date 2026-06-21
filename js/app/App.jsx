@@ -47,6 +47,7 @@
         navRows={[
           {
             id: "main",
+            tier: "primary",
             value: view,
             onChange: selectView,
             tabs: [

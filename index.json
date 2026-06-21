@@ -21,5 +21,14 @@
     "local:css/app.css",
     "local:css/viz-panel.css"
   ],
-  "libs": []
+  "libs": [],
+  "readme": {
+    "tagline": "catálogo de apps con enlaces a cada pantalla del ecosistema.",
+    "badges": ["github-pages", "react"],
+    "features": [
+      "**Cards** por app con enlace a su panel en GitHub Pages",
+      "Copiar URL y abrir en nueva pestaña",
+      "Tabla resumen del ecosistema"
+    ]
+  }
 }
