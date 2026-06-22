@@ -1,10 +1,10 @@
 {
-  "builtAt": "2026-06-19T13:24:59.725Z",
-  "files": 13,
-  "bytesIn": 70341,
-  "bytesOut": 39808,
-  "ratio": 0.566,
-  "hash": "00fbbdb0bfd9",
+  "builtAt": "2026-06-22T18:48:49.162Z",
+  "files": 14,
+  "bytesIn": 75511,
+  "bytesOut": 43385,
+  "ratio": 0.575,
+  "hash": "e705a529ae02",
   "entries": [
     {
       "src": "css/app.css",
@@ -27,14 +27,14 @@
     {
       "src": "js/app/App.jsx",
       "dist": "_dist/js/app/App.js",
-      "bytesIn": 1887,
-      "bytesOut": 1039
+      "bytesIn": 2313,
+      "bytesOut": 1275
     },
     {
       "src": "js/boot/loader.ts",
       "dist": "_dist/js/boot/loader.js",
-      "bytesIn": 1270,
-      "bytesOut": 841
+      "bytesIn": 1318,
+      "bytesOut": 883
     },
     {
       "src": "js/boot/theme-init.mjs",
@@ -57,14 +57,14 @@
     {
       "src": "js/core/urlState.ts",
       "dist": "_dist/js/core/urlState.js",
-      "bytesIn": 6217,
-      "bytesOut": 2719
+      "bytesIn": 6419,
+      "bytesOut": 2793
     },
     {
       "src": "js/core/viz-catalog-data.ts",
       "dist": "_dist/js/core/viz-catalog-data.js",
-      "bytesIn": 2395,
-      "bytesOut": 2124
+      "bytesIn": 2939,
+      "bytesOut": 2632
     },
     {
       "src": "js/core/viz-state.ts",
@@ -75,8 +75,14 @@
     {
       "src": "js/views/CatalogView.jsx",
       "dist": "_dist/js/views/CatalogView.js",
-      "bytesIn": 5081,
-      "bytesOut": 3251
+      "bytesIn": 4969,
+      "bytesOut": 3172
+    },
+    {
+      "src": "js/views/ComponentesView.jsx",
+      "dist": "_dist/js/views/ComponentesView.js",
+      "bytesIn": 4062,
+      "bytesOut": 2796
     },
     {
       "src": "js/views/VizPanel.jsx",
