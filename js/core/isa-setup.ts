@@ -5,7 +5,7 @@
     ns: "MO",
     auth: false,
     api: {
-      local: "http://localhost:8780",
+      local: "http://localhost:8790",
       online: "https://main-orchestrator.jeffaporta.workers.dev",
     },
     theme: true,
