@@ -120,6 +120,19 @@
         },
       },
     },
+    MuiTooltip: {
+      defaultProps: {
+        disableInteractive: true,
+      },
+      styleOverrides: {
+        popper: {
+          pointerEvents: "none",
+        },
+        tooltip: {
+          pointerEvents: "none",
+        },
+      },
+    },
   };
 
   function makeNeonTheme(mode: string) {
