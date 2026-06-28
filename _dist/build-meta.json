@@ -1,10 +1,10 @@
 {
-  "builtAt": "2026-06-22T18:48:49.162Z",
+  "builtAt": "2026-06-27T00:01:30.704Z",
   "files": 14,
-  "bytesIn": 75511,
-  "bytesOut": 43385,
-  "ratio": 0.575,
-  "hash": "e705a529ae02",
+  "bytesIn": 75772,
+  "bytesOut": 43513,
+  "ratio": 0.574,
+  "hash": "d617eefd98dd",
   "entries": [
     {
       "src": "css/app.css",
@@ -51,8 +51,8 @@
     {
       "src": "js/core/neon-theme.ts",
       "dist": "_dist/js/core/neon-theme.js",
-      "bytesIn": 6681,
-      "bytesOut": 3895
+      "bytesIn": 6942,
+      "bytesOut": 4023
     },
     {
       "src": "js/core/urlState.ts",
