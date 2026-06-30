@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const FRONT_SHARED_REF = "release-2026-06-30";
+  const FRONT_SHARED_REF = "e584b60";
   const isLocalDev = /localhost|127\.0\.0\.1|\[::1\]/.test(location.hostname);
   const BOOT_HELPER = isLocalDev
     ? "../../components/front-shared/cdn/boot-helper.mjs"
